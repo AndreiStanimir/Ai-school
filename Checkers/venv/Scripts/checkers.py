@@ -13,6 +13,7 @@ reguli neimplementate:
     - capturari multiple
 """
 
+
 class Joc:
     NR_COLOANE = 8
     NR_LINII = 8
@@ -42,6 +43,9 @@ class Joc:
     def final(self, jucator):
         # verifica daca 'jucator' mai are mutari
         # returneaza 'False' daca nu s-a terminat jocul
+
+
+
         for i in range(Joc.NR_COLOANE):
             for j in range(Joc.NR_COLOANE):
                 # if self.matr[i][j].isalpha():
@@ -124,6 +128,12 @@ class Joc:
                         player_must_capture = True
                     if len(mutari_gasite) > 0 and (must_move == player_must_capture):
                         l_mutari.append((l, c, mutari_gasite))
+        #????
+        if player_must_capture:
+            self.draw_counter=0
+        else
+            self.draw_counter+=1
+
         return l_mutari
 
     def fct_euristica(self):
@@ -135,10 +145,39 @@ class Joc:
                         'N': 5,
                         '.': 0
                         }
-        diferenta_piese=0
+        diferenta_piese = 0
         for i in range(Joc.NR_LINII):
             for p in self.matr[i]:
                 diferenta_piese += valori_piese[p]
+        return diferenta_piese
+
+    def fct_euristica2(self, piesa=5, rege=7.75, back_row=4, mid_box=2.5):
+        valori_piese = {'a': -piesa,
+                        'A': -rege,
+                        'n': piesa,
+                        'N': rege,
+                        '.': 0
+                        }
+        diferenta_piese = 0
+        for i in range(Joc.NR_LINII):
+            for p in self.matr[i]:
+                diferenta_piese += valori_piese[p]
+
+        # evaluate backrows
+        for i in range(0,self.NR_COLOANE):
+            if self.matr[0][i] in ('a','A'):
+                diferenta_piese-=mid_box
+            if self.matr[self.NR_LINII-1][i] in ('n','N')
+                diferenta_piese+=mid_box
+
+        # evaluate center of the board
+        for l in range(3, 5):
+            for c in range(2, 7):
+                p = self.matr[l][c]
+                if p in ('a','A'):
+                    diferenta_piese-=mid_box
+                elif p in ('n','N'):
+                    diferenta_piese+=mid_box
         return diferenta_piese
 
     def estimeaza_scor(self, adancime, jucator_curent):
@@ -168,7 +207,7 @@ class Joc:
 class Stare:
     ADANCIME_MAX = None
 
-    def __init__(self, tabla_joc: Joc, j_curent, adancime, parinte=None, scor=None):
+    def __init__(self, tabla_joc: Joc, j_curent, adancime, draw_counter=0, parinte=None, scor=None):
         self.tabla_joc = tabla_joc
         self.j_curent = j_curent
 
@@ -183,6 +222,8 @@ class Stare:
 
         # cea mai buna mutare din lista de mutari posibile pentru jucatorul curent
         self.stare_aleasa = None
+
+        self.draw_counter=draw_counter
 
     def jucator_opus(self):
         if self.j_curent == Joc.JMIN:
@@ -199,7 +240,7 @@ class Stare:
         for l, c, mutari in l_mutari:
             for m in mutari:
                 tabla_noua = deepcopy(self.tabla_joc)
-                l_stari_mutari.append(Stare(tabla_noua, juc_opus, self.adancime - 1, parinte=self))
+                l_stari_mutari.append(Stare(tabla_noua, juc_opus, self.adancime - 1,self.draw_counter+1, parinte=self,))
                 l_stari_mutari[-1].muta(l, c, m[0], m[1])
 
         return l_stari_mutari
@@ -231,7 +272,7 @@ def min_max(stare):
         return stare
 
     # calculez toate mutarile posibile din starea curenta
-    stare.mutari_posibile = stare.mutari()
+    stare.mutari_posibile = stare.get_starile_urmatoare()
 
     # aplic algoritmul minimax pe toate mutarile posibile (calculand astfel subarborii lor)
     mutari_scor = [min_max(mutare) for mutare in stare.mutari_posibile]
@@ -307,7 +348,6 @@ def afis_daca_final(stare_curenta):
 
 
 def main():
-
     # initializare ADANCIME_MAX
     raspuns_valid = False
     joc_automat = True
@@ -350,7 +390,7 @@ def main():
                 stare_curenta.muta(l, c, dest[0][0], dest[0][1])
                 time.sleep(1)
                 raspuns_valid = True
-            print(*mutari_juc,sep='\n')
+            print(*mutari_juc, sep='\n')
             while not raspuns_valid:
                 try:
                     linie = int(input("linie= "))
