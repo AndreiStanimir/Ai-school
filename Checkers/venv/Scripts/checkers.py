@@ -18,9 +18,9 @@ class Joc:
     NR_COLOANE = 8
     NR_LINII = 8
 
-    SIMBOLURI_JUC = ['a', 'n']
-    JMIN = 'n'
-    JMAX = 'a'
+    SIMBOLURI_JUC = ['n', 'a']
+    JMIN = 'a'
+    JMAX = 'n'
     GOL = '.'
 
     get_opponent = {'A': ['n', 'N'],
@@ -34,6 +34,14 @@ class Joc:
                               ['.', 'a', '.', 'a', '.', 'a', '.', 'a'],
                               ['.', '.', '.', '.', '.', '.', '.', '.'],
                               ['.', '.', '.', '.', '.', '.', '.', '.'],
+                              ['n', '.', 'n', '.', 'n', '.', 'n', '.'],
+                              ['.', 'n', '.', 'n', '.', 'n', '.', 'n'],
+                              ['n', '.', 'n', '.', 'n', '.', 'n', '.']]
+        self.matr=tabla or [  ['.', 'a', '.', 'a', '.', 'a', '.', 'a'],
+                              ['a', '.', 'a', '.', '.', '.', 'a', '.'],
+                              ['.', '.', '.', 'a', '.', 'a', '.', 'a'],
+                              ['.', '.', '.', '.', '.', '.', '.', '.'],
+                              ['.', 'a', '.', '.', '.', '.', '.', '.'],
                               ['n', '.', 'n', '.', 'n', '.', 'n', '.'],
                               ['.', 'n', '.', 'n', '.', 'n', '.', 'n'],
                               ['n', '.', 'n', '.', 'n', '.', 'n', '.']]
@@ -109,7 +117,20 @@ class Joc:
                     must_move = True
                     lista_mutari.append((l + x, c + y))
         return must_move
-
+    # def saritura(self, mutari_gasite, l, c, mutari_noi):
+    #     # l c [1 2 3 4 5 6]
+    #
+    #     if len(mutari_noi)==0:
+    #         return;
+    #
+    #     for i in range(len(mutari_noi)):
+    #         joc_nou: Joc = Joc(self)
+    #         joc_nou.muta(l,c,mutari_noi[i][0], mutari_noi[i][1])
+    #         joc_nou.mutari_piesa(mutari_noi[i][0],mutari_noi[i][1],True)
+    #
+    #     _, mutari_noi = joc_nou.mutari_piesa(l, c, True)
+    #     for l_nou,c_nou in mutari_noi:
+    #         mutari_gasite saritura(joc_nou,l,c,mutari_gasite)
     def mutari(self, jucator):
         """
         returneaza o lista cu elemente de forma (l,c, lista_dest)
@@ -127,12 +148,25 @@ class Joc:
                         l_mutari.clear()  # daca jucatorul poate captura, sterg mutarile gasite inainte, care nu erau modalitati de a captura
                         player_must_capture = True
                     if len(mutari_gasite) > 0 and (must_move == player_must_capture):
-                        l_mutari.append((l, c, mutari_gasite))
+                        mutari_noi = [(mutari_gasite[0][0], mutari_gasite[0][1])]
+                        if must_move:
+                            joc_nou: Joc = deepcopy(self)
+                            while len(mutari_noi)>0:
+                                joc_nou.muta(l,c,mutari_noi[-1])
+                                l, c =mutari_noi[-1][0],mutari_noi[-1][1]
+                                _,m=joc_nou.mutari_piesa(mutari_noi[-1][0],mutari_noi[-1][1],True)
+                                if len(m)>0:
+                                    mutari_noi.append(m[0])
+                                else:
+                                    break
+                        l_mutari.append((l, c, mutari_noi))
+
+
         #????
-        if player_must_capture:
-            self.draw_counter=0
-        else
-            self.draw_counter+=1
+        # if player_must_capture:
+        #     self.draw_counter=0
+        # else:
+        #     self.draw_counter+=1
 
         return l_mutari
 
@@ -167,7 +201,7 @@ class Joc:
         for i in range(0,self.NR_COLOANE):
             if self.matr[0][i] in ('a','A'):
                 diferenta_piese-=mid_box
-            if self.matr[self.NR_LINII-1][i] in ('n','N')
+            if self.matr[self.NR_LINII-1][i] in ('n','N'):
                 diferenta_piese+=mid_box
 
         # evaluate center of the board
@@ -190,6 +224,20 @@ class Joc:
             return 0
         else:
             return self.fct_euristica()
+    def muta(self, l, c, dest):
+        if len(dest) >= 1:
+            l_dest, c_dest = dest[0][0], dest[0][1]
+            self.matr[l_dest][c_dest] = self.matr[l][c]
+            self.promoveaza(l_dest, c_dest)
+            self.matr[l][c] = '.'
+            if abs(l_dest - l) == 2:  # captura
+                self.matr[l + (l_dest - l) // 2][c + (c_dest - c) // 2] = '.'
+            self.muta(l_dest, c_dest, dest[1:])
+    def promoveaza(self, l, c):
+        if self.matr[l][c] == 'a' and l == self.NR_LINII - 1:
+            self.matr[l][c] = 'A'
+        elif self.matr[l][c] == 'n' and l == 0:
+            self.matr[l][c] = 'N'
 
     def __str__(self):
         sir = '  '
@@ -241,16 +289,20 @@ class Stare:
             for m in mutari:
                 tabla_noua = deepcopy(self.tabla_joc)
                 l_stari_mutari.append(Stare(tabla_noua, juc_opus, self.adancime - 1,self.draw_counter+1, parinte=self,))
-                l_stari_mutari[-1].muta(l, c, m[0], m[1])
+                l_stari_mutari[-1].muta(l, c, m)
 
         return l_stari_mutari
 
-    def muta(self, l, c, l_dest, c_dest):
-        self.tabla_joc.matr[l_dest][c_dest] = self.tabla_joc.matr[l][c]
-        self.promoveaza(l_dest, c_dest)
-        self.tabla_joc.matr[l][c] = '.'
-        if abs(l_dest - l) == 2:  # captura
-            self.tabla_joc.matr[l + (l_dest - l) // 2][c + (c_dest - c) // 2] = '.'
+    def muta(self, l, c, dest):
+        if len(dest)>=1:
+            l_dest, c_dest = dest[0][0], dest[0][1]
+            self.tabla_joc.matr[l_dest][c_dest] = self.tabla_joc.matr[l][c]
+            self.promoveaza(l_dest, c_dest)
+            self.tabla_joc.matr[l][c] = '.'
+            if abs(l_dest - l) == 2:  # captura
+                self.tabla_joc.matr[l + (l_dest - l) // 2][c + (c_dest - c) // 2] = '.'
+            self.muta(l_dest,c_dest,dest[1:])
+
 
     def __str__(self):
         sir = str(self.tabla_joc) + "(Juc curent: " + self.j_curent + ")\n"
@@ -349,23 +401,12 @@ def afis_daca_final(stare_curenta):
 
 def main():
     # initializare ADANCIME_MAX
-    raspuns_valid = False
     joc_automat = True
-    while not raspuns_valid:
-        n = input("Adancime maxima a arborelui: ")
+    raspuns_valid = False
 
-        if n.isdigit():
-            Stare.ADANCIME_MAX = int(n)
-            raspuns_valid = True
-        else:
-            print("Trebuie sa introduceti un numar natural nenul.")
+    input_adancime(raspuns_valid)
 
-    # jucatorul alege o mutare random de fiecare data
-    joc_automat = input("Jucatorul joaca automat?(y/n)")
-    if joc_automat == 'y':
-        joc_automat = True
-    else:
-        joc_automat = False
+    joc_automat = input_joc_automat()
 
     tabla_curenta = Joc()
     print("Tabla initiala")
@@ -376,7 +417,7 @@ def main():
 
     linie = -1
     coloana = -1
-
+    stare_curenta.j_curent=Joc.JMAX
     while True:
         if (stare_curenta.j_curent == Joc.JMIN):
             # muta jucatorul
@@ -387,7 +428,7 @@ def main():
                 break
             if joc_automat:
                 l, c, dest = random.choice(mutari_juc)
-                stare_curenta.muta(l, c, dest[0][0], dest[0][1])
+                stare_curenta.muta(l, c, dest[0], dest[0])
                 time.sleep(1)
                 raspuns_valid = True
             print(*mutari_juc, sep='\n')
@@ -402,14 +443,14 @@ def main():
                         for l, c, mutari_posibile in mutari_juc:
                             if l == linie and c == coloana:
                                 if len(mutari_posibile) == 1:
-                                    stare_curenta.muta(l, c, mutari_posibile[0][0], mutari_posibile[0][1])
+                                    stare_curenta.muta(l, c, mutari_posibile[0])
                                     break
                                 print(mutari_posibile)
                                 linie = input("linie = ")
                                 coloana = int(input("coloana = "))
                                 for m in mutari_posibile:
                                     if (linie, coloana) == m:
-                                        stare_curenta.muta(l, c, m[0], m[1])
+                                        stare_curenta.muta(l, c, m)
                                         break
                         raspuns_valid = True
                     else:
@@ -460,6 +501,28 @@ def main():
 
             # S-a realizat o mutare. Schimb jucatorul cu cel opus
             stare_curenta.j_curent = stare_curenta.jucator_opus()
+
+
+def input_joc_automat():
+    # jucatorul alege o mutare random de fiecare data
+    #joc_automat = input("Jucatorul joaca automat?(y/n)")
+    joc_automat='n'
+    if joc_automat == 'y':
+        joc_automat = True
+    else:
+        joc_automat = False
+    return joc_automat
+
+
+def input_adancime(raspuns_valid):
+    while not raspuns_valid:
+        #n = input("Adancime maxima a arborelui: ")
+        n="5"
+        if n.isdigit():
+            Stare.ADANCIME_MAX = int(n)
+            raspuns_valid = True
+        else:
+            print("Trebuie sa introduceti un numar natural nenul.")
 
 
 if __name__ == "__main__":

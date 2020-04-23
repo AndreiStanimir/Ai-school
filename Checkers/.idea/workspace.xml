@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="be7bef3d-cbd6-42ff-8046-88548c045a30" name="Default Changelist" comment="" />
+    <list default="true" id="be7bef3d-cbd6-42ff-8046-88548c045a30" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/checkers.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/checkers.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,7 +18,16 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="MULTIPLE CAPUTURE STIILL BROKEN" />
+      </list>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ProjectId" id="1ZzSFuT9A3svkmJuZnXh0ipEk5q" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -22,9 +35,12 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../MachineLearning" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.editor" />
   </component>
-  <component name="RunManager" selected="Python.Micul_Vrajitor">
+  <component name="RunManager" selected="Python.checkers">
     <configuration name="Micul_Vrajitor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Checkers" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -53,9 +69,9 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\Users\Andrei\PycharmProjects\MachineLearning\venv1\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/venv/Scripts" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/venv/Scripts/checkers.py" />
@@ -67,10 +83,14 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.checkers" />
+      <item itemvalue="Python.Micul_Vrajitor" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Micul_Vrajitor" />
         <item itemvalue="Python.checkers" />
+        <item itemvalue="Python.Micul_Vrajitor" />
       </list>
     </recent_temporary>
   </component>
@@ -92,81 +112,115 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="181" key="#Notifications/0.0.1920.1040@0.0.1920.1040" timestamp="1585842495238" />
-    <state x="414" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585858365483">
+    <state x="414" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1587628974995">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="414" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585858365483" />
-    <state x="841" y="273" key="#xdebugger.XInspectDialog" timestamp="1586338811357">
+    <state x="414" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1587628974995" />
+    <state x="841" y="273" key="#xdebugger.XInspectDialog" timestamp="1587630754995">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="841" y="273" key="#xdebugger.XInspectDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1586338811357" />
+    <state x="841" y="273" key="#xdebugger.XInspectDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1587630754995" />
     <state x="715" y="228" key="#xdebugger.evaluate" timestamp="1585999677889">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="715" y="228" key="#xdebugger.evaluate/0.0.1920.1040@0.0.1920.1040" timestamp="1585999677889" />
+    <state x="627" y="117" key="CommitChangelistDialog2" timestamp="1587672235278">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="627" y="117" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1587672235278" />
     <state width="516" height="466" key="DebuggerActiveHint" timestamp="1586001819420">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="516" height="466" key="DebuggerActiveHint/0.0.1920.1040@0.0.1920.1040" timestamp="1586001819420" />
-    <state x="740" y="278" key="FileChooserDialogImpl" timestamp="1587389855352">
+    <state x="740" y="278" key="FileChooserDialogImpl" timestamp="1587640010379">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="278" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1587389855352" />
-    <state width="1899" height="282" key="GridCell.Tab.0.bottom" timestamp="1587392209177">
+    <state x="740" y="278" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1587640010379" />
+    <state width="1899" height="282" key="GridCell.Tab.0.bottom" timestamp="1587634120652">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1587392209177" />
-    <state width="1899" height="282" key="GridCell.Tab.0.center" timestamp="1587392209177">
+    <state width="1899" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1587634120652" />
+    <state width="1899" height="282" key="GridCell.Tab.0.center" timestamp="1587634120651">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1587392209177" />
-    <state width="1899" height="282" key="GridCell.Tab.0.left" timestamp="1587392209177">
+    <state width="1899" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1587634120651" />
+    <state width="1899" height="282" key="GridCell.Tab.0.left" timestamp="1587634120651">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1587392209177" />
-    <state width="1899" height="282" key="GridCell.Tab.0.right" timestamp="1587392209177">
+    <state width="1899" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1587634120651" />
+    <state width="1899" height="282" key="GridCell.Tab.0.right" timestamp="1587634120652">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1587392209177" />
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1586762369069">
+    <state width="1899" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1587634120652" />
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1587633546143">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1586762369069" />
-    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1586762369069">
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1587633546143" />
+    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1587633546143">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1586762369069" />
-    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1586762369069">
+    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1587633546143" />
+    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1587633546143">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1586762369069" />
-    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1586762369069">
+    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1587633546143" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1587633546143">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586762369069" />
-    <state x="463" y="165" key="SettingsEditor" timestamp="1587481383558">
+    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1587633546143" />
+    <state x="463" y="165" key="SettingsEditor" timestamp="1587629586535">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="463" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1587481383558" />
-    <state width="498" height="398" key="SwitcherDM" timestamp="1585853364971">
+    <state x="463" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1587629586535" />
+    <state width="498" height="398" key="SwitcherDM" timestamp="1587629066581">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="498" height="398" key="SwitcherDM/0.0.1920.1040@0.0.1920.1040" timestamp="1585853364971" />
-    <state x="668" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1587389843659">
+    <state width="498" height="398" key="SwitcherDM/0.0.1920.1040@0.0.1920.1040" timestamp="1587629066581" />
+    <state x="668" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1587624401317">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="668" y="347" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1587389843659" />
-    <state x="626" y="155" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1586339256604">
+    <state x="668" y="347" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1587624401317" />
+    <state x="771" y="439" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1587672245722">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="626" y="155" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1040@0.0.1920.1040" timestamp="1586339256604" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1586680832918">
+    <state x="771" y="439" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1587672245722" />
+    <state x="626" y="155" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1587630805947">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1586680832918" />
+    <state x="626" y="155" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1040@0.0.1920.1040" timestamp="1587630805947" />
+    <state width="600" height="424" key="javadoc.popup" timestamp="1587586146507">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="600" height="424" key="javadoc.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1587586146507" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1587630787213">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1587630787213" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/Scripts/checkers.py</url>
+          <line>154</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/Scripts/checkers.py</url>
+          <line>140</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/Scripts/checkers.py</url>
+          <line>489</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/Scripts/checkers.py</url>
+          <line>419</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint suspend="NONE" type="python-exception">
           <properties notifyOnlyOnFirst="true" notifyOnTerminate="true" exception="BaseException">
@@ -182,6 +236,7 @@
         <watch expression="self.matr[l][c]" language="Python" />
         <watch expression="self.tabla_joc.matr" />
         <watch expression="l_stari_mutari" />
+        <watch expression="self.matr[1]" />
       </configuration>
     </watches-manager>
   </component>
