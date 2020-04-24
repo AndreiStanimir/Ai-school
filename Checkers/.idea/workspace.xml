@@ -91,8 +91,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.checkers" />
       <item itemvalue="Python.Micul_Vrajitor" />
+      <item itemvalue="Python.checkers" />
     </list>
     <recent_temporary>
       <list>
@@ -149,25 +149,25 @@
     </state>
     <state x="493" y="184" key="FileChooserDialogImpl/0.0.1280.689@0.0.1280.689" timestamp="1587563189315" />
     <state x="740" y="278" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1587389855352" />
-    <state width="1260" height="198" key="GridCell.Tab.0.bottom" timestamp="1587566490593">
+    <state width="1260" height="198" key="GridCell.Tab.0.bottom" timestamp="1587710489688">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1260" height="198" key="GridCell.Tab.0.bottom/0.0.1280.689@0.0.1280.689" timestamp="1587566490593" />
+    <state width="1260" height="198" key="GridCell.Tab.0.bottom/0.0.1280.689@0.0.1280.689" timestamp="1587710489688" />
     <state width="1899" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1587392209177" />
-    <state width="1260" height="198" key="GridCell.Tab.0.center" timestamp="1587566490593">
+    <state width="1260" height="198" key="GridCell.Tab.0.center" timestamp="1587710489686">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1260" height="198" key="GridCell.Tab.0.center/0.0.1280.689@0.0.1280.689" timestamp="1587566490593" />
+    <state width="1260" height="198" key="GridCell.Tab.0.center/0.0.1280.689@0.0.1280.689" timestamp="1587710489686" />
     <state width="1899" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1587392209177" />
-    <state width="1260" height="198" key="GridCell.Tab.0.left" timestamp="1587566490593">
+    <state width="1260" height="198" key="GridCell.Tab.0.left" timestamp="1587710489682">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1260" height="198" key="GridCell.Tab.0.left/0.0.1280.689@0.0.1280.689" timestamp="1587566490593" />
+    <state width="1260" height="198" key="GridCell.Tab.0.left/0.0.1280.689@0.0.1280.689" timestamp="1587710489682" />
     <state width="1899" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1587392209177" />
-    <state width="1260" height="198" key="GridCell.Tab.0.right" timestamp="1587566490593">
+    <state width="1260" height="198" key="GridCell.Tab.0.right" timestamp="1587710489687">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state width="1260" height="198" key="GridCell.Tab.0.right/0.0.1280.689@0.0.1280.689" timestamp="1587566490593" />
+    <state width="1260" height="198" key="GridCell.Tab.0.right/0.0.1280.689@0.0.1280.689" timestamp="1587710489687" />
     <state width="1899" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1587392209177" />
     <state width="1260" height="208" key="GridCell.Tab.1.bottom" timestamp="1587562485685">
       <screen x="0" y="0" width="1280" height="689" />
@@ -189,6 +189,10 @@
     </state>
     <state width="1260" height="208" key="GridCell.Tab.1.right/0.0.1280.689@0.0.1280.689" timestamp="1587562485685" />
     <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586762369069" />
+    <state x="346" y="64" key="MultipleFileMergeDialog" timestamp="1587710641875">
+      <screen x="0" y="0" width="1280" height="689" />
+    </state>
+    <state x="346" y="64" key="MultipleFileMergeDialog/0.0.1280.689@0.0.1280.689" timestamp="1587710641875" />
     <state x="309" y="0" key="SettingsEditor" timestamp="1587559019657">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
@@ -202,6 +206,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="668" y="347" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1587389843659" />
+    <state x="421" y="265" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1587710750410">
+      <screen x="0" y="0" width="1280" height="689" />
+    </state>
+    <state x="421" y="265" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.689@0.0.1280.689" timestamp="1587710750410" />
     <state x="626" y="155" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1586339256604">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
