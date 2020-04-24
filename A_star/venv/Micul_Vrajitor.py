@@ -17,7 +17,7 @@ class Nod:
 class Wizard:
     id_counter = 1
 
-    def __init__(self, x, y, shoe_color, shoe_durability=2, h=0, desaga='', hasStone=False):
+    def __init__(self, x, y, shoe_color, shoe_durability=3, h=0, desaga='', hasStone=False):
         self.shoe_color = shoe_color
         self.shoe_durability = shoe_durability
         self.reserve_color = ''
@@ -72,7 +72,9 @@ class Cave:
     # colors_matrix
     # artifacts_matrix
     def __init__(self):
-        fin = open("micul_vrajitor.txt", "r")
+        #fin = open("micul_vrajitor.txt", "r")
+        fin=open("233_Stanimir_Andrei_6_input_1.txt","r");
+        fin=open("233_Stanimir_Andrei_6_input_4.txt","r");
         lines = fin.readlines()
         self.m = len(lines) // 2
 
@@ -201,9 +203,9 @@ class NodParcurgere:
         wizard = self.nod_graf
         wizards = []
         l, c = wizard.x, wizard.y
-        if cave.artifacts_matrix[l][c].isalpha():
+        if cave.artifacts_matrix[l][c].isalpha() and  cave.artifacts_matrix[l][c]!='@':
             wizards = wizard.FoundShoes(cave.artifacts_matrix[l][c])
-        if cave.artifacts_matrix[l][c] == '@':
+        elif cave.artifacts_matrix[l][c] == '@':
             wizard.hasStone = True
             wizards.append(wizard)
         if len(wizards) == 0:
@@ -235,7 +237,6 @@ class NodParcurgere:
 
     def move_wizard(self, new_wizard, new_x, new_y):
         new_wizard.action += "\nSe muta pe de pe {},{} pe {},{}.".format(new_wizard.x, new_wizard.y, new_x, new_y)
-
         new_wizard.x = new_x
         new_wizard.y = new_y
         new_wizard.shoe_durability -= 1
@@ -244,7 +245,7 @@ class NodParcurgere:
         new_wizard.id = Wizard.id_counter
         Wizard.id_counter += 1
         new_wizard.action += "Incaltat: {} (purtari {})\n ".format(new_wizard.shoe_color,
-                                                                   (3 - new_wizard.shoe_durability))
+                                                                   new_wizard.shoe_durability)
         new_wizard.h = cave.calculeaza_distana(new_wizard)
 
     # se modifica in functie de problema
@@ -295,7 +296,6 @@ def a_star():
     """
         Functia care implementeaza algoritmul A-star
     """
-    ### TO DO ... DONE
     rad_arbore = NodParcurgere(cave.start_wizard)
     open = [rad_arbore]  # open va contine elemente de tip NodParcurgere
     closed = []  # closed va contine elemente de tip NodParcurgere
