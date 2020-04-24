@@ -16,7 +16,7 @@ reguli neimplementate:
 
 class Joc:
     NR_COLOANE = 8
-    NR_LINII = 8
+    NR_LINII = 8    
 
     SIMBOLURI_JUC = ['a', 'n']
     JMIN = 'n'
