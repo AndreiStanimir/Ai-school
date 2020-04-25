@@ -1,5 +1,6 @@
 from copy import deepcopy
 import numpy as np
+import time
 
 
 class Nod:
@@ -28,33 +29,51 @@ class Wizard:
         self.x = x
         self.y = y
         self.id = Wizard.id_counter
+        self.prev_shoe_positions = []
         Wizard.id_counter += 1
+        self.nr_pas = 0
 
     def FoundShoes(self, color):
         wizards = []
+        if self.shoe_durability == 0:
+            wizard = deepcopy(self)
+            wizard.id = Wizard.id_counter
+            Wizard.id_counter += 1
+
+            wizard.prev_shoe_positions.append((wizard.x, wizard.y))
+            wizard.shoe_color = color
+            wizard.shoe_durability = 3
+            wizard.action += ("A gasit cizme " + color + " si le pune in picoare\n")
+            wizards.append(wizard)
+            return wizards
         if self.reserve_color == '':  # deseaga goala
             wizard = deepcopy(self)
+            wizard.id = Wizard.id_counter
+            Wizard.id_counter += 1
+            wizard.prev_shoe_positions.append((wizard.x, wizard.y))
+
             wizard.reserve_color = color
             wizard.reserve_durability = 3
             wizard.action += ("A gasit cizme " + color + " si le pune in deseaga.\n")
             wizards.append(wizard)
             return wizards
             # self.action+=
-        if self.shoe_durability == 0:
-            wizard = deepcopy(self)
-            wizard.shoe_color = color
-            wizard.shoe_durability = 3
-            wizard.action += ("A gasit cizme " + color + " si le pune in picoare\n")
-            wizards.append(wizard)
-            return wizards
+
         if self.reserve_color == color and self.reserve_durability != 3:  #
             wizard = deepcopy(self)
+            wizard.id = Wizard.id_counter
+            Wizard.id_counter += 1
+            wizard.prev_shoe_positions.append((wizard.x, wizard.y))
+
             wizard.reserve_color = color
             wizard.reserve_durability = 3
             wizard.action += ("Inlocuieste cizmele din deseaga " + color + ".\n")
             wizards.append(wizard)
         elif self.shoe_color == color and self.shoe_durability != 3:
             wizard = deepcopy(self)
+            wizard.id = Wizard.id_counter
+            Wizard.id_counter += 1
+            wizard.prev_shoe_positions.append((wizard.x, wizard.y))
             wizard.shoe_durability = 3
             wizard.action += ("Inlocuieste cizmele din picioare " + color + ".\n")
             wizards.append(wizard)
@@ -66,15 +85,16 @@ class Wizard:
     def __eq__(self, other):
         # am vrut sa folosesc id unic pentru comparare, nu am reusit :(
         return self.hasStone == other.hasStone and self.shoe_durability == other.shoe_durability and self.x == other.x and self.y == other.y
+        # return self.id == other.id
 
 
 class Cave:
     # colors_matrix
     # artifacts_matrix
-    def __init__(self):
-        #fin = open("micul_vrajitor.txt", "r")
-        fin=open("233_Stanimir_Andrei_6_input_1.txt","r");
-        fin=open("233_Stanimir_Andrei_6_input_4.txt","r");
+    # self.euristica_aleasa = None
+    def __init__(self, fisier, eurisitica):
+        self.euristica_aleasa = eurisitica
+        fin = open(fisier, "r");
         lines = fin.readlines()
         self.m = len(lines) // 2
 
@@ -89,19 +109,56 @@ class Cave:
         print(*colors_matrix, sep='\n')
         print(*artifacts_matrix, sep='\n')
         l, c = np.where(np.array(artifacts_matrix) == '@')
+        if len(l) == 0:
+            print("nu exista piatra")
+            exit()
         self.l_stone, self.c_stone = int(l), int(c)
         l, c = np.where(np.array(artifacts_matrix) == '*')
+        if len(l) == 0:
+            print("nu exista iesire")
+            exit()
         self.l_exit, self.c_exit = int(l), int(c)
 
         self.n = len(colors_matrix[0])
 
-        self.start_wizard = Wizard(int(l), int(c), colors_matrix[int(l)][int(c)])
+        self.start_wizard = Wizard(int(l), int(c), colors_matrix[int(l)][int(c)], 2)
 
-    def calculeaza_distana(self, wizard: Wizard):
+    def distanta(self, x, y, x2, y2):
+        return abs(x - x2) + abs(y - y2)
+
+    def calculeaza_distanta_scop(self, wizard: Wizard):
+        if self.euristica_aleasa == 1:
+            return self.euristica_1(wizard)
+        else:
+            return self.euristica_2(wizard)
+
+    def euristica_1(self, wizard):
+        # returneaza distanta manhattan de la vrajitor la piatra(daca nu o are inca) + distanta de la piatra la iesire
+        # functia este admisibila, pentru ca la fiecare pas, daca gasim papucii necesari,
+        # drumul cel mai scurt catre destinatie este cel putin distanta manhattan
         if wizard.hasStone:
-            return abs(wizard.x - self.l_exit) + abs(wizard.y - self.c_exit)
-        return abs(wizard.x - self.l_stone) + abs(wizard.y - self.c_stone) + \
-               abs(self.l_stone - self.l_exit) + abs(self.c_stone - self.c_exit)
+            return self.distanta(wizard.x, wizard.y, self.l_stone, self.c_stone)
+        return self.distanta(wizard.x, wizard.y, self.l_stone, self.c_stone) + \
+               self.distanta(self.l_stone, self.c_stone, self.l_exit, self.c_exit)
+
+    def euristica_2(self, wizard: Wizard):
+        # verific daca poate ajunge la incaltaminte sau iesire inainte sa moara:
+        # evit sa iau papuci care i-am mai luat
+        max_dist_possible = wizard.shoe_durability + wizard.reserve_durability
+        min_dist = 9999
+        for i in range(wizard.x - max_dist_possible, wizard.x + max_dist_possible + 1):
+            for j in range(wizard.y - max_dist_possible, wizard.y + wizard.shoe_durability + 1):
+                if 0 <= i < self.m and 0 <= j < self.n:
+                    if self.artifacts_matrix[i][j].isalpha() and \
+                            (i, j) not in wizard.prev_shoe_positions:
+                        min_dist = min(self.distanta(i, j, wizard.x, wizard.y), min_dist)
+        if min_dist == 9999:
+            return 999999  # nu se poate progresa
+        return self.euristica_1(wizard)
+
+    def euristica_neadmisibila(self):
+        # la fiecare pas alegem
+        pass
 
 
 class Problema:
@@ -122,7 +179,7 @@ class Problema:
         self.nod_scop = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
         # self.nod_scop = 'f'  # doar info (fara h)
         # print(self.noduri)
-        # print(self.calculeaza_distana(self.nod_start))
+        # print(self.calculeaza_di stanta_scop(self.nod_start))
 
     def cauta_nod_nume(self, matrix):
         """Stiind doar informatia "info" a unui nod,
@@ -203,32 +260,41 @@ class NodParcurgere:
         wizard = self.nod_graf
         wizards = []
         l, c = wizard.x, wizard.y
-        if cave.artifacts_matrix[l][c].isalpha() and  cave.artifacts_matrix[l][c]!='@':
+        if cave.artifacts_matrix[l][c].isalpha() and cave.artifacts_matrix[l][c] != '@':
             wizards = wizard.FoundShoes(cave.artifacts_matrix[l][c])
         elif cave.artifacts_matrix[l][c] == '@':
             wizard.hasStone = True
+            wizard.action += "\nA gasit piatra\n"
+            wizard.prev_shoe_positions = []
             wizards.append(wizard)
         if len(wizards) == 0:
             wizards.append(wizard)
         linie = [0, 0, 1, -1]
         coloana = [-1, 1, 0, 0]
         for i in range(len(wizards)):
-            wizards[i].h = cave.calculeaza_distana(wizards[i])
+            wizards[i].h = cave.calculeaza_distanta_scop(wizards[i])
         for wizard in wizards:
             for i in range(4):
                 new_x, new_y = l + linie[i], c + coloana[i]
                 if 0 <= new_x < m and 0 <= new_y < n:
                     if wizard.shoe_color == cave.colors_matrix[new_x][new_y]:  # don't swap shoes
                         new_wizard: Wizard = deepcopy(wizard)
-
+                        wizard.id = Wizard.id_counter
+                        Wizard.id_counter += 1
                         self.move_wizard(new_wizard, new_x, new_y)
 
                         l_succesori.append(new_wizard)
                     if wizard.reserve_color == cave.colors_matrix[new_x][new_y]:  # swap shoes
                         new_wizard: Wizard = deepcopy(wizard)
+                        wizard.id = Wizard.id_counter
+                        Wizard.id_counter += 1
+
                         new_wizard.shoe_color, new_wizard.reserve_color = new_wizard.reserve_color, new_wizard.shoe_color
                         new_wizard.shoe_durability, new_wizard.reserve_durability = new_wizard.reserve_durability, new_wizard.shoe_durability
                         new_wizard.action += "Isi schimba pantofii in culoarea: " + new_wizard.shoe_color + ". "
+                        if new_wizard.reserve_durability > 0 and new_wizard.reserve_color.isalpha():
+                            new_wizard.action += " Desaga " + new_wizard.shoe_color + " " + str(
+                                3 - new_wizard.reserve_durability) + " purtari. "
                         self.move_wizard(new_wizard, new_x, new_y)
 
                         l_succesori.append(new_wizard)
@@ -236,7 +302,9 @@ class NodParcurgere:
         return l_succesori
 
     def move_wizard(self, new_wizard, new_x, new_y):
-        new_wizard.action += "\nSe muta pe de pe {},{} pe {},{}.".format(new_wizard.x, new_wizard.y, new_x, new_y)
+        new_wizard.action += "\n Pas " + str(new_wizard.nr_pas) + ") Se muta pe de pe {},{} pe {},{}.".format(
+            new_wizard.x, new_wizard.y, new_x, new_y)
+        new_wizard.nr_pas += 1
         new_wizard.x = new_x
         new_wizard.y = new_y
         new_wizard.shoe_durability -= 1
@@ -245,12 +313,17 @@ class NodParcurgere:
         new_wizard.id = Wizard.id_counter
         Wizard.id_counter += 1
         new_wizard.action += "Incaltat: {} (purtari {})\n ".format(new_wizard.shoe_color,
-                                                                   new_wizard.shoe_durability)
-        new_wizard.h = cave.calculeaza_distana(new_wizard)
+                                                                   3 - new_wizard.shoe_durability)
+        if new_wizard.reserve_durability > 0 and new_wizard.reserve_color.isalpha():
+            new_wizard.action += " Desaga " + new_wizard.shoe_color + " " + str(
+                3 - new_wizard.reserve_durability) + " purtari. "
+
+        new_wizard.h = cave.calculeaza_distanta_scop(new_wizard)
 
     # se modifica in functie de problema
     def test_scop(self, wizard):
-        return cave.calculeaza_distana(wizard) == 0
+        return wizard.hasStone and (wizard.x, wizard.y) == (self.cave.l_exit, self.cave.c_exit)
+        # return cave.calculeaza_distanta_scop(wizard) == 0
 
     def __str__(self):
         parinte = self.parinte if self.parinte is None else self.parinte.nod_graf
@@ -297,16 +370,17 @@ def a_star():
         Functia care implementeaza algoritmul A-star
     """
     rad_arbore = NodParcurgere(cave.start_wizard)
-    open = [rad_arbore]  # open va contine elemente de tip NodParcurgere
+    Open = [rad_arbore]  # Open va contine elemente de tip NodParcurgere
     closed = []  # closed va contine elemente de tip NodParcurgere
 
-    while len(open) > 0:
-        # print(str_info_noduri(open))  # afisam lista open
-        nod_curent = open.pop(0)  # scoatem primul element din lista open
+    while len(Open) > 0:
+        # print(str_info_noduri(Open))  # afisam lista Open
+        nod_curent = Open.pop(0)  # scoatem primul element din lista Open
         closed.append(nod_curent)  # si il adaugam la finalul listei closed
-        print(nod_curent.nod_graf)
-        # testez daca nodul extras din lista open este nod scop (si daca da, ies din bucla while)
+        # print(nod_curent.nod_graf)
+        # testez daca nodul extras din lista Open este nod scop (si daca da, ies din bucla while)
         if nod_curent.test_scop(nod_curent.nod_graf):
+            nod_curent.nod_graf.action += "A iesit din pestera"
             break
 
         l_succesori = nod_curent.expandeaza()
@@ -329,33 +403,33 @@ def a_star():
                     # daca f-ul calculat pentru drumul actual este mai bun (mai mic) decat
                     # 	   f-ul pentru drumul gasit anterior (f-ul nodului aflat in lista closed)
                     # atunci actualizez parintele, g si f
-                    # si apoi voi adauga "nod_nou" in lista open
+                    # si apoi voi adauga "nod_nou" in lista Open
                     if (f_succesor < nod_parcg_vechi.f):
                         closed.remove(nod_parcg_vechi)  # scot nodul din lista closed
                         nod_parcg_vechi.parinte = nod_curent  # actualizez parintele
                         nod_parcg_vechi.g = g_succesor  # actualizez g
                         nod_parcg_vechi.f = f_succesor  # actualizez f
-                        nod_nou = nod_parcg_vechi  # setez "nod_nou", care va fi adaugat apoi in open
+                        nod_nou = nod_parcg_vechi  # setez "nod_nou", care va fi adaugat apoi in Open
 
                 else:
-                    # daca nu e in closed, verific daca "nod_succesor" se afla in open
-                    nod_parcg_vechi = in_lista(open, nod_succesor)
+                    # daca nu e in closed, verific daca "nod_succesor" se afla in Open
+                    nod_parcg_vechi = in_lista(Open, nod_succesor)
 
-                    if nod_parcg_vechi is not None:  # "nod_succesor" e in open
+                    if nod_parcg_vechi is not None:  # "nod_succesor" e in Open
                         # daca f-ul calculat pentru drumul actual este mai bun (mai mic) decat
-                        # 	   f-ul pentru drumul gasit anterior (f-ul nodului aflat in lista open)
-                        # atunci scot nodul din lista open
-                        # 		(pentru ca modificarea valorilor f si g imi va strica sortarea listei open)
+                        # 	   f-ul pentru drumul gasit anterior (f-ul nodului aflat in lista Open)
+                        # atunci scot nodul din lista Open
+                        # 		(pentru ca modificarea valorilor f si g imi va strica sortarea listei Open)
                         # actualizez parintele, g si f
-                        # si apoi voi adauga "nod_nou" in lista open (la noua pozitie corecta in sortare)
+                        # si apoi voi adauga "nod_nou" in lista Open (la noua pozitie corecta in sortare)
                         if (f_succesor < nod_parcg_vechi.f):
-                            open.remove(nod_parcg_vechi)
+                            Open.remove(nod_parcg_vechi)
                             nod_parcg_vechi.parinte = nod_curent
                             nod_parcg_vechi.g = g_succesor
                             nod_parcg_vechi.f = f_succesor
                             nod_nou = nod_parcg_vechi
 
-                    else:  # cand "nod_succesor" nu e nici in closed, nici in open
+                    else:  # cand "nod_succesor" nu e nici in closed, nici in Open
                         nod_nou = NodParcurgere(nod_graf=nod_succesor, parinte=nod_curent, g=g_succesor)
                     # se calculeaza f automat in constructor
 
@@ -363,30 +437,42 @@ def a_star():
                     # inserare in lista sortata crescator dupa f
                     # (si pentru f-uri egale descrescator dupa g)
                     i = 0
-                    while i < len(open):
-                        if open[i].f < nod_nou.f:
+                    while i < len(Open):
+                        if Open[i].f < nod_nou.f:
                             i += 1
                         else:
-                            while i < len(open) and open[i].f == nod_nou.f and open[i].g > nod_nou.g:
+                            while i < len(Open) and Open[i].f == nod_nou.f and Open[i].g > nod_nou.g:
                                 i += 1
                             break
 
-                    open.insert(i, nod_nou)
+                    Open.insert(i, nod_nou)
 
+    fout = open(str("233_Stanimir_Andrei_6_output_" + fisier[-5] + ".txt"), "w")
     print("\n------------------ Concluzie -----------------------")
-    if len(open) == 0:
-        print("Lista open e vida, nu avem drum de la nodul start la nodul scop")
+    if len(Open) == 0:
+        fout.write("\nLista open e vida, nu avem drum de la nodul start la nodul scop")
+        # print("Lista open e vida, nu avem drum de la nodul start la nodul scop")
     else:
         print("Drum de cost minim: " + nod_curent.nod_graf.action)
         print("Nr mutari", len(nod_curent.drum_arbore()))
+        fout.write("\nDrum de cost minim: " + nod_curent.nod_graf.action)
+        fout.write("\nNr mutari: " + str(len(nod_curent.drum_arbore())))
+    fout.close()
 
 
 if __name__ == "__main__":
-    # problema = Problema()
-    # NodParcurgere.problema = problema
-    # a_star()
-
-    cave = Cave()
-    NodParcurgere.cave = cave
-    Wizard.id_counter = 1
-    a_star()
+    fisiere = ["233_Stanimir_Andrei_6_input_1.txt", "233_Stanimir_Andrei_6_input_2.txt",
+               "233_Stanimir_Andrei_6_input_3.txt", "233_Stanimir_Andrei_6_input_4.txt"]
+    for fisier in fisiere:
+        for nr_euristica in [1, 2]:
+            cave = Cave(fisier, nr_euristica)
+            NodParcurgere.cave = cave
+            Wizard.id_counter = 1
+            t_inainte = ((time.time() * 1000))
+            a_star()
+            t_dupa = ((time.time() * 1000))
+            fout = open(str("233_Stanimir_Andrei_6_output_" + fisier[-5] + ".txt"), "w")
+            print("Calculatorul a \"gandit\" timp de " + str(
+                round(t_dupa - t_inainte, 2)) + " milisecunde cu euristica " + str(nr_euristica))
+            fout.write("Calculatorul a \"gandit\" timp de " + str(
+                round(t_dupa - t_inainte, 2)) + " milisecunde cu euristica " + str(nr_euristica))
