@@ -14,14 +14,18 @@ reguli neimplementate:
 """
 
 
+class Stare:
+    pass
+
+
 class Joc:
     NR_COLOANE = 8
-    NR_LINII = 8    
+    NR_LINII = 8
 
     SIMBOLURI_JUC = ['n', 'a']
     JMIN = 'a'
     JMAX = 'n'
-    GOL = '.'
+    GOL = '·'
 
     get_opponent = {'A': ['n', 'N'],
                     'a': ['n', 'N'],
@@ -29,30 +33,28 @@ class Joc:
                     'n': ['a', 'A']}
 
     def __init__(self, tabla=None):
-        self.matr = tabla or [['.', 'a', '.', 'a', '.', 'a', '.', 'a'],
-                              ['a', '.', 'a', '.', 'a', '.', 'a', '.'],
-                              ['.', 'a', '.', 'a', '.', 'a', '.', 'a'],
-                              ['.', '.', '.', '.', '.', '.', '.', '.'],
-                              ['.', '.', '.', '.', '.', '.', '.', '.'],
-                              ['n', '.', 'n', '.', 'n', '.', 'n', '.'],
-                              ['.', 'n', '.', 'n', '.', 'n', '.', 'n'],
-                              ['n', '.', 'n', '.', 'n', '.', 'n', '.']]
-        self.matr=tabla or [  ['.', 'a', '.', 'a', '.', 'a', '.', 'a'],
-                              ['a', '.', 'a', '.', '.', '.', 'a', '.'],
-                              ['.', '.', '.', 'a', '.', 'a', '.', 'a'],
-                              ['.', '.', '.', '.', '.', '.', '.', '.'],
-                              ['.', 'a', '.', '.', '.', '.', '.', '.'],
-                              ['n', '.', 'n', '.', 'n', '.', 'n', '.'],
-                              ['.', 'n', '.', 'n', '.', 'n', '.', 'n'],
-                              ['n', '.', 'n', '.', 'n', '.', 'n', '.']]
-        self.nr_piese_albe = 12
-        self.nr_piese_negre = 12
+        self.matr = tabla or [['·', 'a', '·', 'a', '·', 'a', '·', 'a'],
+                              ['a', '·', 'a', '·', 'a', '·', 'a', '·'],
+                              ['·', 'a', '·', 'a', '·', 'a', '·', 'a'],
+                              ['·', '·', '·', '·', '·', '·', '·', '·'],
+                              ['·', '·', '·', '·', '·', '·', '·', '·'],
+                              ['n', '·', 'n', '·', 'n', '·', 'n', '·'],
+                              ['·', 'n', '·', 'n', '·', 'n', '·', 'n'],
+                              ['n', '·', 'n', '·', 'n', '·', 'n', '·']]
+        self.matr = tabla or [['·', 'a', '·', 'a', '·', 'a', '·', 'a'],
+                              ['a', '·', 'a', '·', '·', '·', 'a', '·'],
+                              ['·', '·', '·', 'a', '·', 'a', '·', 'a'],
+                              ['·', '·', '·', '·', '·', '·', '·', '·'],
+                              ['·', 'a', '·', '·', '·', '·', '·', '·'],
+                              ['n', '·', 'n', '·', 'n', '·', 'n', '·'],
+                              ['·', 'n', '·', 'n', '·', 'n', '·', 'n'],
+                              ['n', '·', 'n', '·', 'n', '·', 'n', '·']]
+        # self.nr_piese_albe = 12
+        # self.nr_piese_negre = 12
 
     def final(self, jucator):
         # verifica daca 'jucator' mai are mutari
         # returneaza 'False' daca nu s-a terminat jocul
-
-
 
         for i in range(Joc.NR_COLOANE):
             for j in range(Joc.NR_COLOANE):
@@ -66,7 +68,6 @@ class Joc:
     def mutari_piesa(self, l, c, must_move=False):
         # returneaza o lista de coordonate unde poate fi mutata piesa de pe l,c
         lista_mutari = []
-
         if self.matr[l][c].isupper():
             must_move = self.white_check_capture(l, c, must_move, lista_mutari)
             must_move = self.black_check_capture(l, c, must_move, lista_mutari)
@@ -75,7 +76,7 @@ class Joc:
             indicies = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
             for x, y in indicies:
                 if 0 <= l + x < Joc.NR_LINII and 0 <= c + y < Joc.NR_COLOANE:
-                    if self.matr[l + x][c + y] == '.':
+                    if self.matr[l + x][c + y] == '·':
                         lista_mutari.append((l + x, c + y))
 
         if self.matr[l][c] == 'a':
@@ -85,7 +86,7 @@ class Joc:
             indicies = [(1, 1), (1, -1)]
             for x, y in indicies:
                 if 0 <= l + x < Joc.NR_LINII and 0 <= c + y < Joc.NR_COLOANE:
-                    if self.matr[l + x][c + y] == '.':
+                    if self.matr[l + x][c + y] == '·':
                         lista_mutari.append((l + x, c + y))
         elif self.matr[l][c] == 'n':
             must_move = self.black_check_capture(l, c, must_move, lista_mutari)
@@ -94,7 +95,7 @@ class Joc:
             indicies = [(-1, 1), (-1, -1)]
             for x, y in indicies:
                 if 0 <= l + x < Joc.NR_LINII and 0 <= c + y < Joc.NR_COLOANE:
-                    if self.matr[l + x][c + y] == '.':
+                    if self.matr[l + x][c + y] == '·':
                         lista_mutari.append((l + x, c + y))
         return must_move, lista_mutari
 
@@ -102,7 +103,7 @@ class Joc:
         indicies = [(-2, 2), (-2, -2)]
         for x, y in indicies:
             if 0 <= l + x < Joc.NR_LINII and 0 <= c + y < Joc.NR_COLOANE:
-                if self.matr[l + x][c + y] == '.' and self.matr[l + x // 2][c + y // 2] in self.get_opponent[
+                if self.matr[l + x][c + y] == '·' and self.matr[l + x // 2][c + y // 2] in self.get_opponent[
                     self.matr[l][c]]:
                     must_move = True
                     lista_mutari.append((l + x, c + y))
@@ -112,11 +113,12 @@ class Joc:
         indicies = [(2, 2), (2, -2)]
         for x, y in indicies:
             if 0 <= l + x < Joc.NR_LINII and 0 <= c + y < Joc.NR_COLOANE:
-                if self.matr[l + x][c + y] == '.' and self.matr[l + x // 2][c + y // 2] in self.get_opponent[
+                if self.matr[l + x][c + y] == '·' and self.matr[l + x // 2][c + y // 2] in self.get_opponent[
                     self.matr[l][c]]:
                     must_move = True
                     lista_mutari.append((l + x, c + y))
         return must_move
+
     # def saritura(self, mutari_gasite, l, c, mutari_noi):
     #     # l c [1 2 3 4 5 6]
     #
@@ -131,7 +133,12 @@ class Joc:
     #     _, mutari_noi = joc_nou.mutari_piesa(l, c, True)
     #     for l_nou,c_nou in mutari_noi:
     #         mutari_gasite saritura(joc_nou,l,c,mutari_gasite)
-    def mutari(self, jucator):
+    def mutari(self, stare: Stare):
+        jucator = stare.j_curent
+        if stare.must_move_piece is not None:
+            l, c = stare.must_move_piece
+            must_move, mutari_gasite = self.mutari_piesa(l, c)
+            return [(l, c, mutari_gasite)]
         """
         returneaza o lista cu elemente de forma (l,c, lista_dest)
         unde l si c sunt coordonatele piesei care poate fi mutata
@@ -148,21 +155,20 @@ class Joc:
                         l_mutari.clear()  # daca jucatorul poate captura, sterg mutarile gasite inainte, care nu erau modalitati de a captura
                         player_must_capture = True
                     if len(mutari_gasite) > 0 and (must_move == player_must_capture):
-                        mutari_noi = [(mutari_gasite[0][0], mutari_gasite[0][1])]
-                        if must_move:
-                            joc_nou: Joc = deepcopy(self)
-                            while len(mutari_noi)>0:
-                                joc_nou.muta(l,c,mutari_noi[-1])
-                                l, c =mutari_noi[-1][0],mutari_noi[-1][1]
-                                _,m=joc_nou.mutari_piesa(mutari_noi[-1][0],mutari_noi[-1][1],True)
-                                if len(m)>0:
-                                    mutari_noi.append(m[0])
-                                else:
-                                    break
-                        l_mutari.append((l, c, mutari_noi))
+                        l_mutari.append((l, c, mutari_gasite))
+                        # mutari_noi = [(mutari_gasite[0][0], mutari_gasite[0][1])]
+                        # if must_move:
+                        #     joc_nou: Joc = deepcopy(self)
+                        #     while len(mutari_noi) > 0:
+                        #         joc_nou.muta(l, c, mutari_noi[-1])
+                        #         l, c = mutari_noi[-1][0], mutari_noi[-1][1]
+                        #         _, m = joc_nou.mutari_piesa(mutari_noi[-1][0], mutari_noi[-1][1], True)
+                        #         if len(m) > 0:
+                        #             mutari_noi.append(m[0])
+                        #         else:
+                        #             break
 
-
-        #????
+        # ????
         # if player_must_capture:
         #     self.draw_counter=0
         # else:
@@ -177,7 +183,7 @@ class Joc:
                         'A': -5,
                         'n': 3,
                         'N': 5,
-                        '.': 0
+                        '·': 0
                         }
         diferenta_piese = 0
         for i in range(Joc.NR_LINII):
@@ -190,7 +196,7 @@ class Joc:
                         'A': -rege,
                         'n': piesa,
                         'N': rege,
-                        '.': 0
+                        '·': 0
                         }
         diferenta_piese = 0
         for i in range(Joc.NR_LINII):
@@ -198,20 +204,20 @@ class Joc:
                 diferenta_piese += valori_piese[p]
 
         # evaluate backrows
-        for i in range(0,self.NR_COLOANE):
-            if self.matr[0][i] in ('a','A'):
-                diferenta_piese-=mid_box
-            if self.matr[self.NR_LINII-1][i] in ('n','N'):
-                diferenta_piese+=mid_box
+        for i in range(0, self.NR_COLOANE):
+            if self.matr[0][i] in ('a', 'A'):
+                diferenta_piese -= mid_box
+            if self.matr[self.NR_LINII - 1][i] in ('n', 'N'):
+                diferenta_piese += mid_box
 
         # evaluate center of the board
         for l in range(3, 5):
             for c in range(2, 7):
                 p = self.matr[l][c]
-                if p in ('a','A'):
-                    diferenta_piese-=mid_box
-                elif p in ('n','N'):
-                    diferenta_piese+=mid_box
+                if p in ('a', 'A'):
+                    diferenta_piese -= mid_box
+                elif p in ('n', 'N'):
+                    diferenta_piese += mid_box
         return diferenta_piese
 
     def estimeaza_scor(self, adancime, jucator_curent):
@@ -224,15 +230,17 @@ class Joc:
             return 0
         else:
             return self.fct_euristica()
+
     def muta(self, l, c, dest):
         if len(dest) >= 1:
-            l_dest, c_dest = dest[0][0], dest[0][1]
+            l_dest, c_dest = dest[0], dest[1]
             self.matr[l_dest][c_dest] = self.matr[l][c]
             self.promoveaza(l_dest, c_dest)
-            self.matr[l][c] = '.'
+            self.matr[l][c] = '·'
             if abs(l_dest - l) == 2:  # captura
-                self.matr[l + (l_dest - l) // 2][c + (c_dest - c) // 2] = '.'
+                self.matr[l + (l_dest - l) // 2][c + (c_dest - c) // 2] = '·'
             self.muta(l_dest, c_dest, dest[1:])
+
     def promoveaza(self, l, c):
         if self.matr[l][c] == 'a' and l == self.NR_LINII - 1:
             self.matr[l][c] = 'A'
@@ -243,21 +251,25 @@ class Joc:
         sir = '  '
 
         for nr_col in range(ord('a'), ord('h') + 1):
-            sir += chr(nr_col) + ''
+            sir += chr(nr_col) + ' '
         sir += '\n'
 
         for i in range(self.NR_COLOANE):
             sir += str(i) + '|'
-            sir = sir + ''.join(self.matr[i]) + '\n'
+            sir = sir + ''.join(" ".join(self.matr[i])) + '\n'
         return sir
 
 
 class Stare:
     ADANCIME_MAX = None
 
-    def __init__(self, tabla_joc: Joc, j_curent, adancime, draw_counter=0, parinte=None, scor=None):
+    def __init__(self, tabla_joc: Joc, j_curent, adancime, draw_counter=0, must_move_piece=None, parinte=None,
+                 scor=None):
         self.tabla_joc = tabla_joc
         self.j_curent = j_curent
+
+        # daca face o captura, jucatorul trebuie sa captureze din nou cu aceeasi pieasa (daca este posibil)
+        self.must_move_piece = must_move_piece
 
         # adancimea in arborele de stari
         self.adancime = adancime
@@ -271,7 +283,7 @@ class Stare:
         # cea mai buna mutare din lista de mutari posibile pentru jucatorul curent
         self.stare_aleasa = None
 
-        self.draw_counter=draw_counter
+        self.draw_counter = draw_counter
 
     def jucator_opus(self):
         if self.j_curent == Joc.JMIN:
@@ -282,27 +294,37 @@ class Stare:
     def get_starile_urmatoare(self):
         # returneaza toate starile posibile
         l_stari_mutari = []
-        l_mutari = self.tabla_joc.mutari(self.j_curent)
-        juc_opus = self.jucator_opus()
+        l_mutari = self.tabla_joc.mutari(self)
+        juc_opus=self.j_curent
+        if self.must_move_piece is not None:
+            print(l_mutari)
+            if len(l_mutari[0][2])==0:
+                juc_opus=self.jucator_opus()
+                return [Stare(self.tabla_joc, juc_opus, self.adancime - 1, self.draw_counter + 1, parinte=self )]
+
+        else:
+            juc_opus = self.jucator_opus()
+
         tabla_noua = None
         for l, c, mutari in l_mutari:
             for m in mutari:
                 tabla_noua = deepcopy(self.tabla_joc)
-                l_stari_mutari.append(Stare(tabla_noua, juc_opus, self.adancime - 1,self.draw_counter+1, parinte=self,))
+                l_stari_mutari.append(
+                    Stare(tabla_noua, juc_opus, self.adancime - 1, self.draw_counter + 1, parinte=self, ))
                 l_stari_mutari[-1].muta(l, c, m)
 
         return l_stari_mutari
 
     def muta(self, l, c, dest):
-        if len(dest)>=1:
-            l_dest, c_dest = dest[0][0], dest[0][1]
+        if len(dest) >= 1:
+            l_dest, c_dest = dest[0], dest[0]
             self.tabla_joc.matr[l_dest][c_dest] = self.tabla_joc.matr[l][c]
             self.promoveaza(l_dest, c_dest)
-            self.tabla_joc.matr[l][c] = '.'
+            self.tabla_joc.matr[l][c] = '·'
             if abs(l_dest - l) == 2:  # captura
-                self.tabla_joc.matr[l + (l_dest - l) // 2][c + (c_dest - c) // 2] = '.'
-            self.muta(l_dest,c_dest,dest[1:])
-
+                self.tabla_joc.matr[l + (l_dest - l) // 2][c + (c_dest - c) // 2] = '·'
+                self.must_move_piece=(l_dest,c_dest)
+            self.muta(l_dest, c_dest, dest[1:])
 
     def __str__(self):
         sir = str(self.tabla_joc) + "(Juc curent: " + self.j_curent + ")\n"
@@ -349,6 +371,7 @@ def alpha_beta(alpha, beta, stare):
         return stare  # este intr-un interval invalid deci nu o mai procesez
 
     stare.mutari_posibile = stare.get_starile_urmatoare()
+
     if stare.j_curent == Joc.JMAX:
         scor_curent = float('-inf')
 
@@ -400,12 +423,13 @@ def afis_daca_final(stare_curenta):
 
 
 def main():
-    # initializare ADANCIME_MAX
     joc_automat = True
     raspuns_valid = False
 
-    input_adancime(raspuns_valid)
-
+    adancimi = [2, 5, 8]
+    #nivel = input_dificultate()
+    nivel=2
+    Stare.ADANCIME_MAX = adancimi[nivel - 1]
     joc_automat = input_joc_automat()
 
     tabla_curenta = Joc()
@@ -417,12 +441,14 @@ def main():
 
     linie = -1
     coloana = -1
-    stare_curenta.j_curent=Joc.JMAX
+    stare_curenta.j_curent = Joc.JMAX
+    timp_inceput_joc = time.time() * 1000
     while True:
         if (stare_curenta.j_curent == Joc.JMIN):
             # muta jucatorul
+            t_inainte = time.time() * 1000
             raspuns_valid = False
-            mutari_juc = stare_curenta.tabla_joc.mutari(stare_curenta.j_curent)
+            mutari_juc = stare_curenta.tabla_joc.mutari(stare_curenta)
             if len(mutari_juc) == 0 or mutari_juc is None:
                 print("A castigat n!")
                 break
@@ -464,11 +490,9 @@ def main():
                 except ValueError:
                     print("Coloana trebuie sa fie un numar intreg.")
 
-            # dupa iesirea din while sigur am valida coloana
-            # deci pot plasa simbolul pe "tabla de joc"
-            # pozitie = linie * Joc.NR_COLOANE + coloana
-            # stare_curenta.tabla_joc.matr[pozitie] = Joc.JMIN
-
+            t_dupa = time.time() * 1000
+            t_mutare = round(t_dupa - t_inainte, 2)
+            print("Jucatorul a \"gandit\" timp de " + str(t_mutare) + " milisecunde ")
             # afisarea starii jocului in urma mutarii utilizatorului
             print("\nTabla dupa mutarea jucatorului")
             print(str(stare_curenta))
@@ -486,15 +510,15 @@ def main():
             # Mutare calculator
 
             # preiau timpul in milisecunde de dinainte de mutare        
-            t_inainte = int(round(time.time() * 1000))
+            t_inainte = time.time() * 1000
             stare_actualizata = alpha_beta(-5000, 5000, stare_curenta)
             stare_curenta.tabla_joc = stare_actualizata.stare_aleasa.tabla_joc
             print("Tabla dupa mutarea calculatorului")
             print(str(stare_curenta))
 
             # preiau timpul in milisecunde de dupa mutare
-            t_dupa = int(round(time.time() * 1000))
-            print("Calculatorul a \"gandit\" timp de " + str(t_dupa - t_inainte) + " milisecunde.")
+            t_dupa = time.time() * 1000
+            print("Calculatorul a \"gandit\" timp de " + str(round(t_dupa - t_inainte, 2)) + " milisecunde.")
 
             if (afis_daca_final(stare_curenta)):
                 break
@@ -502,11 +526,14 @@ def main():
             # S-a realizat o mutare. Schimb jucatorul cu cel opus
             stare_curenta.j_curent = stare_curenta.jucator_opus()
 
+    timp_jucat = round(time.time() * 1000 - timp_inceput_joc, 2)
+    print("Jocul a durat " + str(timp_jucat / 1000) + " secunde")
+
 
 def input_joc_automat():
     # jucatorul alege o mutare random de fiecare data
-    #joc_automat = input("Jucatorul joaca automat?(y/n)")
-    joc_automat='n'
+    # joc_automat = input("Jucatorul joaca automat?(y/n)")
+    joc_automat = 'n'
     if joc_automat == 'y':
         joc_automat = True
     else:
@@ -514,15 +541,12 @@ def input_joc_automat():
     return joc_automat
 
 
-def input_adancime(raspuns_valid):
-    while not raspuns_valid:
-        #n = input("Adancime maxima a arborelui: ")
-        n="5"
-        if n.isdigit():
-            Stare.ADANCIME_MAX = int(n)
-            raspuns_valid = True
-        else:
-            print("Trebuie sa introduceti un numar natural nenul.")
+def input_dificultate():
+    # joc_automat = input()
+    while True:
+        raspuns = int(input("Dificultate?\n1 pentru incepator\n2 pentru mediu\n3 pentru avansat(y/n)"))
+        if int(raspuns) in [1, 2, 3]:
+            return raspuns
 
 
 if __name__ == "__main__":
