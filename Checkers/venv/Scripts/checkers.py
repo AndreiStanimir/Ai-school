@@ -156,6 +156,8 @@ class Joc:
                         player_must_capture = True
                     if len(mutari_gasite) > 0 and (must_move == player_must_capture):
                         l_mutari.append((l, c, mutari_gasite))
+                        # stare.must_move_piece = (mutari_gasite[0])
+
                         # mutari_noi = [(mutari_gasite[0][0], mutari_gasite[0][1])]
                         # if must_move:
                         #     joc_nou: Joc = deepcopy(self)
@@ -229,17 +231,17 @@ class Joc:
         elif t_final == 'remiza':
             return 0
         else:
-            return self.fct_euristica()
+            return self.fct_euristica2()
 
     def muta(self, l, c, dest):
-        if len(dest) >= 1:
-            l_dest, c_dest = dest[0], dest[1]
-            self.matr[l_dest][c_dest] = self.matr[l][c]
-            self.promoveaza(l_dest, c_dest)
-            self.matr[l][c] = '·'
-            if abs(l_dest - l) == 2:  # captura
-                self.matr[l + (l_dest - l) // 2][c + (c_dest - c) // 2] = '·'
-            self.muta(l_dest, c_dest, dest[1:])
+        l_dest, c_dest = dest  # dest[0], dest[0]
+        self.tabla_joc.matr[l_dest][c_dest] = self.tabla_joc.matr[l][c]
+        self.promoveaza(l_dest, c_dest)
+        self.tabla_joc.matr[l][c] = '·'
+        if abs(l_dest - l) == 2:  # captura
+            self.tabla_joc.matr[l + (l_dest - l) // 2][c + (c_dest - c) // 2] = '·'
+            self.must_move_piece = (l_dest, c_dest)
+        # self.muta(l_dest, c_dest, dest[1:])
 
     def promoveaza(self, l, c):
         if self.matr[l][c] == 'a' and l == self.NR_LINII - 1:
@@ -290,17 +292,18 @@ class Stare:
             return Joc.JMAX
         else:
             return Joc.JMIN
+        self.must_move_piece = None
 
     def get_starile_urmatoare(self):
         # returneaza toate starile posibile
         l_stari_mutari = []
         l_mutari = self.tabla_joc.mutari(self)
-        juc_opus=self.j_curent
+        juc_opus = self.j_curent
         if self.must_move_piece is not None:
             print(l_mutari)
-            if len(l_mutari[0][2])==0:
-                juc_opus=self.jucator_opus()
-                return [Stare(self.tabla_joc, juc_opus, self.adancime - 1, self.draw_counter + 1, parinte=self )]
+            if len(l_mutari[0][2]) == 0:
+                juc_opus = self.jucator_opus()
+                return [Stare(self.tabla_joc, juc_opus, self.adancime - 1, self.draw_counter + 1, parinte=self)]
 
         else:
             juc_opus = self.jucator_opus()
@@ -317,14 +320,20 @@ class Stare:
 
     def muta(self, l, c, dest):
         if len(dest) >= 1:
-            l_dest, c_dest = dest[0], dest[0]
+            l_dest, c_dest = dest  # dest[0], dest[0]
             self.tabla_joc.matr[l_dest][c_dest] = self.tabla_joc.matr[l][c]
             self.promoveaza(l_dest, c_dest)
             self.tabla_joc.matr[l][c] = '·'
             if abs(l_dest - l) == 2:  # captura
                 self.tabla_joc.matr[l + (l_dest - l) // 2][c + (c_dest - c) // 2] = '·'
-                self.must_move_piece=(l_dest,c_dest)
-            self.muta(l_dest, c_dest, dest[1:])
+                if len(self.tabla_joc.mutari_piesa(l_dest, c_dest, True)) > 0:
+                    self.must_move_piece = (l_dest, c_dest)
+                    return True
+                else:
+                    self.must_move_piece = None
+            return False
+
+            # self.muta(l_dest, c_dest, dest[1:])
 
     def __str__(self):
         sir = str(self.tabla_joc) + "(Juc curent: " + self.j_curent + ")\n"
@@ -427,8 +436,8 @@ def main():
     raspuns_valid = False
 
     adancimi = [2, 5, 8]
-    #nivel = input_dificultate()
-    nivel=2
+    # nivel = input_dificultate()
+    nivel = 2
     Stare.ADANCIME_MAX = adancimi[nivel - 1]
     joc_automat = input_joc_automat()
 
@@ -454,7 +463,7 @@ def main():
                 break
             if joc_automat:
                 l, c, dest = random.choice(mutari_juc)
-                stare_curenta.muta(l, c, dest[0], dest[0])
+                stare_curenta.muta(l, c, dest)  # todo
                 time.sleep(1)
                 raspuns_valid = True
             print(*mutari_juc, sep='\n')
@@ -469,15 +478,15 @@ def main():
                         for l, c, mutari_posibile in mutari_juc:
                             if l == linie and c == coloana:
                                 if len(mutari_posibile) == 1:
-                                    stare_curenta.muta(l, c, mutari_posibile[0])
+                                    repeta = stare_curenta.muta(l, c, mutari_posibile[0])
                                     break
                                 print(mutari_posibile)
                                 linie = input("linie = ")
                                 coloana = int(input("coloana = "))
                                 for m in mutari_posibile:
                                     if (linie, coloana) == m:
-                                        stare_curenta.muta(l, c, m)
-                                        break
+                                        repeta = stare_curenta.muta(l, c, m)
+
                         raspuns_valid = True
                     else:
                         print("Coloana invalida (trebuie sa fie un numar intre 0 si {}).".format(Joc.NR_COLOANE - 1))
@@ -503,7 +512,8 @@ def main():
                 break
 
             # S-a realizat o mutare. Schimb jucatorul cu cel opus
-            stare_curenta.j_curent = stare_curenta.jucator_opus()
+            if not repeta:
+                stare_curenta.j_curent = stare_curenta.jucator_opus()
 
         # --------------------------------
         else:  # jucatorul e JMAX (calculatorul)
@@ -524,7 +534,8 @@ def main():
                 break
 
             # S-a realizat o mutare. Schimb jucatorul cu cel opus
-            stare_curenta.j_curent = stare_curenta.jucator_opus()
+            if stare_curenta.must_move_piece is None:
+                stare_curenta.j_curent = stare_curenta.jucator_opus()
 
     timp_jucat = round(time.time() * 1000 - timp_inceput_joc, 2)
     print("Jocul a durat " + str(timp_jucat / 1000) + " secunde")

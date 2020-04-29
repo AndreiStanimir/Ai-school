@@ -2,7 +2,8 @@ from copy import deepcopy
 import numpy as np
 import time
 
-inf=9999
+inf = 9999
+
 
 class Nod:
     def __init__(self, matrix, h):
@@ -17,7 +18,7 @@ class Nod:
 
 
 class Wizard:
-    id_counter = 1
+    # id_counter = 1
 
     def __init__(self, x, y, shoe_color, shoe_durability=3, h=0, desaga='', hasStone=False):
         self.shoe_color = shoe_color
@@ -29,18 +30,20 @@ class Wizard:
         self.action = ''
         self.x = x
         self.y = y
-        self.id = Wizard.id_counter
+        # self.id = Wizard.id_counter
         self.prev_shoe_positions = []
 
-        Wizard.id_counter += 1
+        # Wizard.id_counter += 1
         self.nr_pas = 0
 
     def FoundShoes(self, color):
+        # se apeleaza cand vrajitorul ajunde la o pereche de papuci
+        # returneaza o lista de vrajitori, fiecare vrajitor alege sa faca ceva diferit
         wizards = []
         if self.shoe_durability == 0:
             wizard = deepcopy(self)
-            wizard.id = Wizard.id_counter
-            Wizard.id_counter += 1
+            # wizard.id = Wizard.id_counter
+            # Wizard.id_counter += 1
 
             wizard.prev_shoe_positions.append((wizard.x, wizard.y))
             wizard.shoe_color = color
@@ -50,8 +53,8 @@ class Wizard:
             return wizards
         if self.reserve_color == '':  # deseaga goala
             wizard = deepcopy(self)
-            wizard.id = Wizard.id_counter
-            Wizard.id_counter += 1
+            # wizard.id = Wizard.id_counter
+            # Wizard.id_counter += 1
             wizard.prev_shoe_positions.append((wizard.x, wizard.y))
 
             wizard.reserve_color = color
@@ -95,6 +98,7 @@ class Cave:
     # artifacts_matrix
     # self.euristica_aleasa = None
     def __init__(self, fisier, eurisitica):
+
         self.euristica_aleasa = eurisitica
         fin = open(fisier, "r");
         lines = fin.readlines()
@@ -110,15 +114,19 @@ class Cave:
             artifacts_matrix[i] = artifacts_matrix[i].rstrip().split(' ')
         print(*colors_matrix, sep='\n')
         print(*artifacts_matrix, sep='\n')
+        self.error = None
         l, c = np.where(np.array(artifacts_matrix) == '@')
         if len(l) == 0:
+            fout = open(str("233_Stanimir_Andrei_6_output_" + fisier[-5] + ".txt"), "w")
             print("nu exista piatra")
-            exit()
+            self.error = "nu exista piatra\n"
+            return
         self.l_stone, self.c_stone = int(l), int(c)
         l, c = np.where(np.array(artifacts_matrix) == '*')
         if len(l) == 0:
             print("nu exista iesire")
-            exit()
+            self.error("nu exista iesire\n")
+            return
         self.l_exit, self.c_exit = int(l), int(c)
 
         self.n = len(colors_matrix[0])
@@ -137,18 +145,21 @@ class Cave:
     def euristica_1(self, wizard):
         # daca a gasit piatra, returneaza distanta manhattan de la piatra la iesire
         # functia este admisibila, pentru ca la fiecare pas, daca gasim papucii necesari,
-        # drumul cel mai scurt catre destinatie este cel putin distanta manhattan
+        # drumul cel mai scurt catre destinatie este cel putin distanta manhattan.
+
+        # Nu este consistenta, deoarece vrajitorul poate face pasi in directia opusa a iesirii,
+        # astfel directia manhattan sa mareste fata de vrajitor in pozitia precedenta.
         if wizard.hasStone:
-            return self.distanta(wizard.x, wizard.y,self.l_exit,self.c_exit)
+            return self.distanta(wizard.x, wizard.y, self.l_exit, self.c_exit)
         else:
             return inf;
-        #return self.distanta(wizard.x, wizard.y, self.l_stone, self.c_stone) + \
+        # return self.distanta(wizard.x, wizard.y, self.l_stone, self.c_stone) + \
         #       self.distanta(self.l_stone, self.c_stone, self.l_exit, self.c_exit)
-
 
     def euristica_2(self, wizard: Wizard):
         # verific daca poate ajunge la incaltaminte sau iesire inainte sa moara:
         # evit sa iau papuci care i-am mai luat
+        # cand iau piatra, golesc lista wizard.prev_shoe_positions
         max_dist_possible = wizard.shoe_durability + wizard.reserve_durability
         min_dist = 9999
         for i in range(wizard.x - max_dist_possible, wizard.x + max_dist_possible + 1):
@@ -161,8 +172,8 @@ class Cave:
             return 999999  # nu se poate progresa
         return self.euristica_1(wizard)
 
-    def euristica_neadmisibila(self ):
-        # la fiecare pas alegem
+    def euristica_neadmisibila(self):
+        # o posibila functie neadmisibila returneaza numarul de "patratele" neexplorate din pestera
         pass
 
 
@@ -237,14 +248,8 @@ class NodParcurgere:
             nod_c = nod_c.parinte
         return False
 
-    # se modifica in functie de problema
-
     def expandeaza(self):
-        """Pentru nodul curent (self) parinte, trebuie sa gasiti toti succesorii (fiii)
-        si sa returnati o lista de tupluri (nod_fiu, cost_muchie_tata_fiu),
-        sau lista vida, daca nu exista niciunul.
-        (Fiecare tuplu contine un obiect de tip Nod si un numar.)
-        """
+        # returneaza o lista de vrajitori noi, fiecare reprezinta un succesor
         l_succesori = []
         n = cave.n
         m = cave.m
@@ -269,17 +274,18 @@ class NodParcurgere:
             for i in range(4):
                 new_x, new_y = l + linie[i], c + coloana[i]
                 if 0 <= new_x < m and 0 <= new_y < n:
+                    # creez cate 2 vrajitori, unul care schimba papucii, iar celalat nu
                     if wizard.shoe_color == cave.colors_matrix[new_x][new_y]:  # don't swap shoes
                         new_wizard: Wizard = deepcopy(wizard)
-                        wizard.id = Wizard.id_counter
-                        Wizard.id_counter += 1
+                        # wizard.id = Wizard.id_counter
+                        # Wizard.id_counter += 1
                         self.move_wizard(new_wizard, new_x, new_y)
 
                         l_succesori.append(new_wizard)
-                    if wizard.reserve_color == cave.colors_matripusx[new_x][new_y]:  # swap shoes
+                    if wizard.reserve_color == cave.colors_matrix[new_x][new_y]:  # swap shoes
                         new_wizard: Wizard = deepcopy(wizard)
-                        wizard.id = Wizard.id_counter
-                        Wizard.id_counter += 1
+                        # wizard.id = Wizard.id_counter
+                        # Wizard.id_counter += 1
 
                         new_wizard.shoe_color, new_wizard.reserve_color = new_wizard.reserve_color, new_wizard.shoe_color
                         new_wizard.shoe_durability, new_wizard.reserve_durability = new_wizard.reserve_durability, new_wizard.shoe_durability
@@ -294,6 +300,7 @@ class NodParcurgere:
         return l_succesori
 
     def move_wizard(self, new_wizard, new_x, new_y):
+        # muta vrajitorul pe o pozitie noua
         new_wizard.action += "\n Pas " + str(new_wizard.nr_pas) + ") Se muta pe de pe {},{} pe {},{}.".format(
             new_wizard.x, new_wizard.y, new_x, new_y)
         new_wizard.nr_pas += 1
@@ -302,8 +309,8 @@ class NodParcurgere:
         new_wizard.shoe_durability -= 1
         if new_wizard.shoe_durability == 0:
             new_wizard.shoe_color = ''
-        new_wizard.id = Wizard.id_counter
-        Wizard.id_counter += 1
+        # new_wizard.id = Wizard.id_counter
+        # Wizard.id_counter += 1
         new_wizard.action += "Incaltat: {} (purtari {})\n ".format(new_wizard.shoe_color,
                                                                    3 - new_wizard.shoe_durability)
         if new_wizard.reserve_durability > 0 and new_wizard.reserve_color.isalpha():
@@ -312,10 +319,8 @@ class NodParcurgere:
 
         new_wizard.h = cave.calculeaza_distanta_scop(new_wizard)
 
-    # se modifica in functie de problema
     def test_scop(self, wizard):
         return wizard.hasStone and (wizard.x, wizard.y) == (self.cave.l_exit, self.cave.c_exit)
-        # return cave.calculeaza_distanta_scop(wizard) == 0
 
     def __str__(self):
         parinte = self.parinte if self.parinte is None else self.parinte.nod_graf
@@ -439,10 +444,10 @@ def a_star():
 
                     Open.insert(i, nod_nou)
 
-    fout = open(str("233_Stanimir_Andrei_6_output_" + fisier[-5] + ".txt"), "w")
+    fout = open(str("233_Stanimir_Andrei_6_output_" + fisier[-5] + ".txt"), "a")
     print("\n------------------ Concluzie -----------------------")
     if len(Open) == 0:
-        fout.write("\nLista open e vida, nu avem drum de la nodul start la nodul scop")
+        fout.write("\nLista open e vida, nu avem drum de la nodul start la nodul scop\n")
         # print("Lista open e vida, nu avem drum de la nodul start la nodul scop")
     else:
         print("Drum de cost minim: " + nod_curent.nod_graf.action)
@@ -456,15 +461,22 @@ if __name__ == "__main__":
     fisiere = ["233_Stanimir_Andrei_6_input_1.txt", "233_Stanimir_Andrei_6_input_2.txt",
                "233_Stanimir_Andrei_6_input_3.txt", "233_Stanimir_Andrei_6_input_4.txt"]
     for fisier in fisiere:
+        fout = open(str("233_Stanimir_Andrei_6_output_" + fisier[-5] + ".txt"), "w")
+        fout.close()
+    for fisier in fisiere:
+        fout = open(str("233_Stanimir_Andrei_6_output_" + fisier[-5] + ".txt"), "a")
         for nr_euristica in [1, 2]:
             cave = Cave(fisier, nr_euristica)
+            if cave.error is not None:
+                fout.write(cave.error)
+                break;
             NodParcurgere.cave = cave
-            Wizard.id_counter = 1
+            # Wizard.id_counter = 1
             t_inainte = ((time.time() * 1000))
             a_star()
             t_dupa = ((time.time() * 1000))
-            fout = open(str("233_Stanimir_Andrei_6_output_" + fisier[-5] + ".txt"), "w")
             print("Calculatorul a \"gandit\" timp de " + str(
-                round(t_dupa - t_inainte, 2)) + " milisecunde cu euristica " + str(nr_euristica))
+                round(t_dupa - t_inainte, 2)) + " milisecunde cu euristica " + str(nr_euristica) + "\n")
             fout.write("Calculatorul a \"gandit\" timp de " + str(
-                round(t_dupa - t_inainte, 2)) + " milisecunde cu euristica " + str(nr_euristica))
+                round(t_dupa - t_inainte, 2)) + " milisecunde cu euristica " + str(nr_euristica) + "\n")
+        fout.close()

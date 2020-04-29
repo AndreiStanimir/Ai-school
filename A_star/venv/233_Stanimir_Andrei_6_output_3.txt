@@ -1,1 +1,15 @@
-Calculatorul a "gandit" timp de 2.03 milisecunde cu euristica 2
+
+Drum de cost minim: 
+ Pas 0) Se muta pe de pe 0,0 pe 0,1.Incaltat: r (purtari 2)
+ A gasit cizme r si le pune in deseaga.
+Isi schimba pantofii in culoarea: r.  Desaga r 2 purtari. 
+ Pas 1) Se muta pe de pe 0,1 pe 0,2.Incaltat: r (purtari 1)
+  Desaga r 2 purtari. 
+A gasit piatra
+Isi schimba pantofii in culoarea: r.  Desaga r 1 purtari. 
+ Pas 2) Se muta pe de pe 0,2 pe 0,1.Incaltat:  (purtari 3)
+  Desaga  1 purtari. A gasit cizme r si le pune in picoare
+Isi schimba pantofii in culoarea: r.  Desaga r 0 purtari. 
+ Pas 3) Se muta pe de pe 0,1 pe 0,0.Incaltat: r (purtari 2)
+  Desaga r 0 purtari. A iesit din pestera
+Nr mutari: 5Calculatorul a "gandit" timp de 2.01 milisecunde cu euristica 1
