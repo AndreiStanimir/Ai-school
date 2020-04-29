@@ -1,1 +1,1 @@
-Calculatorul a "gandit" timp de 1.0 milisecunde cu euristica 2
+Calculatorul a "gandit" timp de 0.0 milisecunde cu euristica 2

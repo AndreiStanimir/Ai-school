@@ -2,6 +2,7 @@ from copy import deepcopy
 import numpy as np
 import time
 
+inf=9999
 
 class Nod:
     def __init__(self, matrix, h):
@@ -30,6 +31,7 @@ class Wizard:
         self.y = y
         self.id = Wizard.id_counter
         self.prev_shoe_positions = []
+
         Wizard.id_counter += 1
         self.nr_pas = 0
 
@@ -133,13 +135,16 @@ class Cave:
             return self.euristica_2(wizard)
 
     def euristica_1(self, wizard):
-        # returneaza distanta manhattan de la vrajitor la piatra(daca nu o are inca) + distanta de la piatra la iesire
+        # daca a gasit piatra, returneaza distanta manhattan de la piatra la iesire
         # functia este admisibila, pentru ca la fiecare pas, daca gasim papucii necesari,
         # drumul cel mai scurt catre destinatie este cel putin distanta manhattan
         if wizard.hasStone:
-            return self.distanta(wizard.x, wizard.y, self.l_stone, self.c_stone)
-        return self.distanta(wizard.x, wizard.y, self.l_stone, self.c_stone) + \
-               self.distanta(self.l_stone, self.c_stone, self.l_exit, self.c_exit)
+            return self.distanta(wizard.x, wizard.y,self.l_exit,self.c_exit)
+        else:
+            return inf;
+        #return self.distanta(wizard.x, wizard.y, self.l_stone, self.c_stone) + \
+        #       self.distanta(self.l_stone, self.c_stone, self.l_exit, self.c_exit)
+
 
     def euristica_2(self, wizard: Wizard):
         # verific daca poate ajunge la incaltaminte sau iesire inainte sa moara:
@@ -156,7 +161,7 @@ class Cave:
             return 999999  # nu se poate progresa
         return self.euristica_1(wizard)
 
-    def euristica_neadmisibila(self):
+    def euristica_neadmisibila(self ):
         # la fiecare pas alegem
         pass
 
@@ -164,22 +169,9 @@ class Cave:
 class Problema:
 
     def __init__(self):
-        # fin = open("input", "r")
-        # n = int(fin.readline())
-        # lines = fin.readlines()
-        # for i in range(2 * n):
-        #     lines[i] = lines[i].rstrip()
-        # print(lines)
-
-        # self.noduri = [
-        #     Nod(lines[0:n], 0)
-        # ]
         self.n = 3
         self.nod_start = Nod([[2, 4, 3], [8, 7, 5], [1, 0, 6]], 0)  # Nod([[1,2,3],[4,5,6],[7,0,8]],0)#
         self.nod_scop = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
-        # self.nod_scop = 'f'  # doar info (fara h)
-        # print(self.noduri)
-        # print(self.calculeaza_di stanta_scop(self.nod_start))
 
     def cauta_nod_nume(self, matrix):
         """Stiind doar informatia "info" a unui nod,
@@ -284,7 +276,7 @@ class NodParcurgere:
                         self.move_wizard(new_wizard, new_x, new_y)
 
                         l_succesori.append(new_wizard)
-                    if wizard.reserve_color == cave.colors_matrix[new_x][new_y]:  # swap shoes
+                    if wizard.reserve_color == cave.colors_matripusx[new_x][new_y]:  # swap shoes
                         new_wizard: Wizard = deepcopy(wizard)
                         wizard.id = Wizard.id_counter
                         Wizard.id_counter += 1
