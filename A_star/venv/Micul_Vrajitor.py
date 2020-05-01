@@ -66,8 +66,8 @@ class Wizard:
 
         if self.reserve_color == color and self.reserve_durability != 3:  #
             wizard = deepcopy(self)
-            wizard.id = Wizard.id_counter
-            Wizard.id_counter += 1
+            #wizard.id = Wizard.id_counter
+            #Wizard.id_counter += 1
             wizard.prev_shoe_positions.append((wizard.x, wizard.y))
 
             wizard.reserve_color = color
@@ -76,8 +76,8 @@ class Wizard:
             wizards.append(wizard)
         elif self.shoe_color == color and self.shoe_durability != 3:
             wizard = deepcopy(self)
-            wizard.id = Wizard.id_counter
-            Wizard.id_counter += 1
+            # wizard.id = Wizard.id_counter
+            # Wizard.id_counter += 1
             wizard.prev_shoe_positions.append((wizard.x, wizard.y))
             wizard.shoe_durability = 3
             wizard.action += ("Inlocuieste cizmele din picioare " + color + ".\n")

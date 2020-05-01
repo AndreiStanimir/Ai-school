@@ -1,0 +1,66 @@
+
+Drum de cost minim: 
+ Pas 0) Se muta pe de pe 0,1 pe 1,1.Incaltat: r (purtari 2)
+ A gasit cizme a si le pune in deseaga.
+
+ Pas 1) Se muta pe de pe 1,1 pe 1,2.Incaltat:  (purtari 3)
+  Desaga  0 purtari. Isi schimba pantofii in culoarea: a. 
+ Pas 2) Se muta pe de pe 1,2 pe 2,2.Incaltat: a (purtari 1)
+ 
+ Pas 3) Se muta pe de pe 2,2 pe 3,2.Incaltat: a (purtari 2)
+ A gasit cizme g si le pune in deseaga.
+
+ Pas 4) Se muta pe de pe 3,2 pe 4,2.Incaltat:  (purtari 3)
+  Desaga  0 purtari. 
+A gasit piatra
+Isi schimba pantofii in culoarea: g. 
+ Pas 5) Se muta pe de pe 4,2 pe 4,1.Incaltat: g (purtari 1)
+ 
+ Pas 6) Se muta pe de pe 4,1 pe 4,0.Incaltat: g (purtari 2)
+ A gasit cizme v si le pune in deseaga.
+Isi schimba pantofii in culoarea: v.  Desaga v 2 purtari. 
+ Pas 7) Se muta pe de pe 4,0 pe 3,0.Incaltat: v (purtari 1)
+  Desaga v 2 purtari. 
+ Pas 8) Se muta pe de pe 3,0 pe 3,1.Incaltat: v (purtari 2)
+  Desaga v 2 purtari. 
+ Pas 9) Se muta pe de pe 3,1 pe 2,1.Incaltat:  (purtari 3)
+  Desaga  2 purtari. A gasit cizme r si le pune in picoare
+
+ Pas 10) Se muta pe de pe 2,1 pe 1,1.Incaltat: r (purtari 1)
+  Desaga r 2 purtari. 
+ Pas 11) Se muta pe de pe 1,1 pe 0,1.Incaltat: r (purtari 2)
+  Desaga r 2 purtari. A iesit din pestera
+Nr mutari: 13
+Drum de cost minim: 
+ Pas 0) Se muta pe de pe 0,1 pe 1,1.Incaltat: r (purtari 2)
+ A gasit cizme a si le pune in deseaga.
+
+ Pas 1) Se muta pe de pe 1,1 pe 1,2.Incaltat:  (purtari 3)
+  Desaga  0 purtari. Isi schimba pantofii in culoarea: a. 
+ Pas 2) Se muta pe de pe 1,2 pe 2,2.Incaltat: a (purtari 1)
+ 
+ Pas 3) Se muta pe de pe 2,2 pe 3,2.Incaltat: a (purtari 2)
+ A gasit cizme g si le pune in deseaga.
+
+ Pas 4) Se muta pe de pe 3,2 pe 4,2.Incaltat:  (purtari 3)
+  Desaga  0 purtari. 
+A gasit piatra
+Isi schimba pantofii in culoarea: g. 
+ Pas 5) Se muta pe de pe 4,2 pe 4,1.Incaltat: g (purtari 1)
+ 
+ Pas 6) Se muta pe de pe 4,1 pe 4,0.Incaltat: g (purtari 2)
+ A gasit cizme v si le pune in deseaga.
+Isi schimba pantofii in culoarea: v.  Desaga v 2 purtari. 
+ Pas 7) Se muta pe de pe 4,0 pe 3,0.Incaltat: v (purtari 1)
+  Desaga v 2 purtari. 
+ Pas 8) Se muta pe de pe 3,0 pe 3,1.Incaltat: v (purtari 2)
+  Desaga v 2 purtari. 
+ Pas 9) Se muta pe de pe 3,1 pe 2,1.Incaltat:  (purtari 3)
+  Desaga  2 purtari. A gasit cizme r si le pune in picoare
+
+ Pas 10) Se muta pe de pe 2,1 pe 1,1.Incaltat: r (purtari 1)
+  Desaga r 2 purtari. 
+ Pas 11) Se muta pe de pe 1,1 pe 0,1.Incaltat: r (purtari 2)
+  Desaga r 2 purtari. A iesit din pestera
+Nr mutari: 13Calculatorul a "gandit" timp de 2.52 milisecunde cu euristica 1
+Calculatorul a "gandit" timp de 5.59 milisecunde cu euristica 2
