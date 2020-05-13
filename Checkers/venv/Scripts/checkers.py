@@ -8,9 +8,7 @@ from copy import deepcopy
 jucatorul primeste o lista cu piesele pe care le poate muta si unde le poate muta
 
 reguli neimplementate:
-    - schimbare culoare jucator
     - verificare remiza
-    - capturari multiple
 """
 
 
@@ -70,7 +68,7 @@ class Joc:
         if self.matr[l][c].isupper():
             attack = self.white_check_capture(l, c, must_move, lista_mutari)
             attack = self.black_check_capture(l, c, must_move, lista_mutari)
-            if attack:
+            if must_move:
                 return attack, lista_mutari
             indicies = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
             for x, y in indicies:
@@ -80,7 +78,7 @@ class Joc:
 
         if self.matr[l][c] == 'a':
             attack = self.white_check_capture(l, c, must_move, lista_mutari)
-            if attack:
+            if must_move:
                 return attack, lista_mutari
             indicies = [(1, 1), (1, -1)]
             for x, y in indicies:
@@ -89,7 +87,7 @@ class Joc:
                         lista_mutari.append((l + x, c + y))
         elif self.matr[l][c] == 'n':
             attack = self.black_check_capture(l, c, must_move, lista_mutari)
-            if attack:
+            if must_move:
                 return attack, lista_mutari
             indicies = [(-1, 1), (-1, -1)]
             for x, y in indicies:
@@ -149,13 +147,13 @@ class Joc:
     def fct_euristica(self):
         # idee de euristica luata de pe www.cs.columbia.edu/~devans/TIC/AB.html
         # daca schimbam jucatorii intre ei, schimbam semnul la valori
-        valori_piese = {'a': -3,
-                        'A': -5,
-                        'n': 3,
-                        'N': 5,
+        valori_piese = {'a': -3 *Joc.OPPONENT_MULTIPLIER,
+                        'A': -5 *Joc.OPPONENT_MULTIPLIER,
+                        'n': 3 *Joc.OPPONENT_MULTIPLIER,
+                        'N': 5 *Joc.OPPONENT_MULTIPLIER,
                         '·': 0
                         }
-        #valori_piese=[p*Joc.OPPONENT_MULTIPLIER for p in valori_piese]
+
         diferenta_piese = 0
         for i in range(Joc.NR_LINII):
             for p in self.matr[i]:
@@ -163,12 +161,15 @@ class Joc:
         return diferenta_piese
 
     def fct_euristica2(self, piesa=5, rege=7.75, back_row=4, mid_box=2.5):
-        valori_piese = {'a': -piesa,
-                        'A': -rege,
-                        'n': piesa,
-                        'N': rege,
+        valori_piese = {'a': -piesa *Joc.OPPONENT_MULTIPLIER,
+                        'A': -rege *Joc.OPPONENT_MULTIPLIER,
+                        'n': piesa *Joc.OPPONENT_MULTIPLIER,
+                        'N': rege *Joc.OPPONENT_MULTIPLIER,
                         '·': 0
                         }
+        rege*=Joc.OPPONENT_MULTIPLIER
+        back_row*=Joc.OPPONENT_MULTIPLIER
+        mid_box*=Joc.OPPONENT_MULTIPLIER
         diferenta_piese = 0
         for i in range(Joc.NR_LINII):
             for p in self.matr[i]:
@@ -194,9 +195,9 @@ class Joc:
     def estimeaza_scor(self, adancime, jucator_curent):
         t_final = self.final(jucator_curent)
         if t_final == Joc.JMAX:
-            return (9999 + adancime)
+            return (9999 + adancime)*-Joc.OPPONENT_MULTIPLIER
         elif t_final == Joc.JMIN:
-            return (-9999 - adancime)
+            return (-9999 - adancime)*-Joc.OPPONENT_MULTIPLIER
         elif t_final == 'remiza':
             return 0
         else:
@@ -263,7 +264,7 @@ class Stare:
             #print(l_mutari)
             if len(l_mutari[0][2]) == 0:
                 juc_opus = self.jucator_opus()
-                return [Stare(self.tabla_joc, juc_opus, self.adancime - 1, self.draw_counter + 1, parinte=self)]
+                return [Stare(self.tabla_joc, juc_opus, self.adancime - 1, draw_counter= self.draw_counter + 1, parinte=self)]
 
         else:
             juc_opus = self.jucator_opus()
@@ -273,7 +274,7 @@ class Stare:
             for m in mutari:
                 tabla_noua = deepcopy(self.tabla_joc)
                 l_stari_mutari.append(
-                    Stare(tabla_noua, juc_opus, self.adancime - 1, self.draw_counter + 1, parinte=self, ))
+                    Stare(tabla_noua, juc_opus, self.adancime - 1, draw_counter= self.draw_counter + 1, parinte=self, ))
                 l_stari_mutari[-1].muta(l, c, m)
 
         return l_stari_mutari
@@ -285,6 +286,7 @@ class Stare:
         self.promoveaza(l_dest, c_dest)
         self.tabla_joc.matr[l][c] = '·'
         if abs(l_dest - l) == 2:  # captura
+            self.draw_counter=0
             self.tabla_joc.matr[l + (l_dest - l) // 2][c + (c_dest - c) // 2] = '·'
             if len(self.tabla_joc.mutari_piesa(l_dest, c_dest, True)) > 0:
                 self.must_move_piece = (l_dest, c_dest)
@@ -292,6 +294,7 @@ class Stare:
             else:
                 self.must_move_piece = None
         else:
+            self.draw_counter+=1
             self.must_move_piece = None
         return False
 
@@ -312,6 +315,9 @@ class Stare:
 
 
 def min_max(stare):
+    if stare.draw_counter==50:
+        stare.scor=0
+        return stare
     if stare.adancime == 0 or stare.tabla_joc.final(stare.j_curent):
         stare.scor = stare.tabla_joc.estimeaza_scor(stare.adancime,stare.j_curent)
         return stare
@@ -324,13 +330,13 @@ def min_max(stare):
 
     if stare.j_curent == Joc.JMAX:
         # daca jucatorul e JMAX aleg starea-fiica cu scorul maxim
-        if (len(mutari_scor) == 0):
+        if len(mutari_scor) == 0:
             stare.scor = stare.tabla_joc.estimeaza_scor(stare.adancime, stare.j_curent)
             return stare
         stare.stare_aleasa = max(mutari_scor, key=lambda x: x.scor)
     else:
         # daca jucatorul e JMIN aleg starea-fiica cu scorul minim
-        if (len(mutari_scor) == 0):
+        if len(mutari_scor) == 0:
             stare.scor = stare.tabla_joc.estimeaza_scor(stare.adancime, stare.j_curent)
             return stare
         stare.stare_aleasa = min(mutari_scor, key=lambda x: x.scor)
@@ -340,6 +346,9 @@ def min_max(stare):
 
 
 def alpha_beta(alpha, beta, stare):
+    if stare.draw_counter >= 50:
+        stare.scor = 0
+        return stare
     if stare.adancime == 0 or stare.tabla_joc.final(stare.j_curent):
         stare.scor = stare.tabla_joc.estimeaza_scor(stare.adancime, stare.j_curent)
         return stare
@@ -356,10 +365,10 @@ def alpha_beta(alpha, beta, stare):
             # calculeaza scorul
             stare_noua = alpha_beta(alpha, beta, mutare)
 
-            if (scor_curent < stare_noua.scor):
+            if  scor_curent < stare_noua.scor:
                 stare.stare_aleasa = stare_noua
                 scor_curent = stare_noua.scor
-            if (alpha < stare_noua.scor):
+            if alpha < stare_noua.scor and stare_noua.scor<=0:
                 alpha = stare_noua.scor
                 if alpha >= beta:
                     break
@@ -370,11 +379,11 @@ def alpha_beta(alpha, beta, stare):
         for mutare in stare.mutari_posibile:
             stare_noua = alpha_beta(alpha, beta, mutare)
 
-            if (scor_curent > stare_noua.scor):
+            if scor_curent > stare_noua.scor:
                 stare.stare_aleasa = stare_noua
                 scor_curent = stare_noua.scor
 
-            if (beta > stare_noua.scor):
+            if beta > stare_noua.scor and stare_noua.scor>=0:
                 beta = stare_noua.scor
                 if alpha >= beta:
                     break
@@ -410,38 +419,55 @@ def main():
             algoritm=min_max
         elif raspuns=='2':
             algoritm=alpha_beta
-
-
     adancimi = [2, 5, 8]
-    # nivel = input_dificultate()
-    nivel = 2
+    nivel = input_dificultate()
     Stare.ADANCIME_MAX = adancimi[nivel - 1]
-    joc_automat = input_joc_automat()
+
+    #joc_automat = input_joc_automat()
+
+    culoare_piese=None
+    while culoare_piese is None:
+        raspuns = input("n pentru negre\na pentru albe ")
+        if raspuns == 'n':
+            culoare_piese='n'
+        elif raspuns == 'a':
+            culoare_piese = 'a'
+
 
     tabla_curenta = Joc()
     print("Tabla initiala")
     print(str(tabla_curenta))
 
     # creare stare initiala
-    stare_curenta = Stare(tabla_curenta, Joc.SIMBOLURI_JUC[1], Stare.ADANCIME_MAX)
+    stare_curenta = Stare(tabla_curenta, 'n', Stare.ADANCIME_MAX)
 
     linie = -1
     coloana = -1
-    stare_curenta.j_curent = Joc.JMAX
+    if culoare_piese == 'n':
+        Joc.JMIN,Joc.JMAX=Joc.JMAX,Joc.JMIN
+        Joc.OPPONENT_MULTIPLIER=-1
+    #     stare_curenta.j_curent = Joc.JMIN
+    # else:
+    #     stare_curenta.j_curent=Joc.JMAX
     timp_inceput_joc = time.time() * 1000
     while True:
-        if (stare_curenta.j_curent == Joc.JMIN):
+        #print(stare_curenta.draw_counter)
+        #print(stare_curenta.tabla_joc.estimeaza_scor(0,stare_curenta.j_curent))
+        if stare_curenta.draw_counter==50:
+            print("remiza")
+            return
+        if stare_curenta.j_curent == Joc.JMIN:
             # muta jucatorul
             t_inainte = time.time() * 1000
             raspuns_valid = False
             mutari_juc = stare_curenta.tabla_joc.mutari(stare_curenta)
             if len(mutari_juc) == 0 or mutari_juc is None:
-                print("A castigat n!")
+                print("A castigat ",Joc.JMAX)
                 break
             if joc_automat:
                 l, c, dest = random.choice(mutari_juc)
-                stare_curenta.muta(l, c, dest[0])  # todo
-                time.sleep(1)
+                stare_curenta.muta(l, c, dest[0])
+                #time.sleep(1)
                 raspuns_valid = True
             print(*mutari_juc, sep='\n')
             repeta=False
@@ -554,7 +580,7 @@ def input_joc_automat():
 def input_dificultate():
     # joc_automat = input()
     while True:
-        raspuns = int(input("Dificultate?\n1 pentru incepator\n2 pentru mediu\n3 pentru avansat(y/n)"))
+        raspuns = input("Dificultate?\n1 pentru incepator\n2 pentru mediu\n3 pentru avansat\n")
         if int(raspuns) in [1, 2, 3]:
             return raspuns
 
