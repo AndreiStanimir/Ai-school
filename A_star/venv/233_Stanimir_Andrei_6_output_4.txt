@@ -62,5 +62,5 @@ Isi schimba pantofii in culoarea: v.  Desaga v 2 purtari.
   Desaga r 2 purtari. 
  Pas 11) Se muta pe de pe 1,1 pe 0,1.Incaltat: r (purtari 2)
   Desaga r 2 purtari. A iesit din pestera
-Nr mutari: 13Calculatorul a "gandit" timp de 2.52 milisecunde cu euristica 1
-Calculatorul a "gandit" timp de 5.59 milisecunde cu euristica 2
+Nr mutari: 13Calculatorul a "gandit" timp de 3.99 milisecunde cu euristica 1
+Calculatorul a "gandit" timp de 5.98 milisecunde cu euristica 2

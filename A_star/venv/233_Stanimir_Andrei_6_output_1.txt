@@ -2,5 +2,5 @@
 Lista open e vida, nu avem drum de la nodul start la nodul scop
 
 Lista open e vida, nu avem drum de la nodul start la nodul scop
-Calculatorul a "gandit" timp de 0.0 milisecunde cu euristica 1
-Calculatorul a "gandit" timp de 0.0 milisecunde cu euristica 2
+Calculatorul a "gandit" timp de 3.0 milisecunde cu euristica 1
+Calculatorul a "gandit" timp de 1.0 milisecunde cu euristica 2

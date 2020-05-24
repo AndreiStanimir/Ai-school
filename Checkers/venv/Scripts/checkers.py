@@ -25,7 +25,7 @@ class Joc:
     JMAX = 'n'
     GOL = '·'
 
-    OPPONENT_MULTIPLIER=1
+    OPPONENT_MULTIPLIER = 1
     get_opponent = {'A': ['n', 'N'],
                     'a': ['n', 'N'],
                     'N': ['a', 'A'],
@@ -104,7 +104,7 @@ class Joc:
                     self.matr[l][c]]:
                     must_move = True
                     lista_mutari.append((l + x, c + y))
-        if len(lista_mutari)==0:
+        if len(lista_mutari) == 0:
             return False
         return must_move
 
@@ -116,17 +116,18 @@ class Joc:
                     self.matr[l][c]]:
                     must_move = True
                     lista_mutari.append((l + x, c + y))
-        if len(lista_mutari)==0:
+        if len(lista_mutari) == 0:
             return False
         return must_move
+
     def mutari(self, stare: Stare):
         jucator = stare.j_curent
         if stare.must_move_piece is not None:
             l, c = stare.must_move_piece
             must_move, mutari_gasite = self.mutari_piesa(l, c)
-            if len(mutari_gasite)==0:
-                stare.must_move_piece=None
-                return [(l,c,[])]
+            if len(mutari_gasite) == 0:
+                stare.must_move_piece = None
+                return [(l, c, [])]
             return [(l, c, mutari_gasite)]
         l_mutari = []
         player_must_capture = False
@@ -135,7 +136,7 @@ class Joc:
             for c in range(Joc.NR_COLOANE):
                 if self.matr[l][c].lower() == jucator:
                     must_move, mutari_gasite = self.mutari_piesa(l, c)
-                    if len(mutari_gasite)==0:
+                    if len(mutari_gasite) == 0:
                         continue
                     if must_move and not player_must_capture:
                         l_mutari.clear()  # daca jucatorul poate captura, sterg mutarile gasite inainte, care nu erau modalitati de a captura
@@ -147,10 +148,10 @@ class Joc:
     def fct_euristica(self):
         # idee de euristica luata de pe www.cs.columbia.edu/~devans/TIC/AB.html
         # daca schimbam jucatorii intre ei, schimbam semnul la valori
-        valori_piese = {'a': -3 *Joc.OPPONENT_MULTIPLIER,
-                        'A': -5 *Joc.OPPONENT_MULTIPLIER,
-                        'n': 3 *Joc.OPPONENT_MULTIPLIER,
-                        'N': 5 *Joc.OPPONENT_MULTIPLIER,
+        valori_piese = {'a': -3 * Joc.OPPONENT_MULTIPLIER,
+                        'A': -5 * Joc.OPPONENT_MULTIPLIER,
+                        'n': 3 * Joc.OPPONENT_MULTIPLIER,
+                        'N': 5 * Joc.OPPONENT_MULTIPLIER,
                         '·': 0
                         }
 
@@ -161,15 +162,15 @@ class Joc:
         return diferenta_piese
 
     def fct_euristica2(self, piesa=5, rege=7.75, back_row=4, mid_box=2.5):
-        valori_piese = {'a': -piesa *Joc.OPPONENT_MULTIPLIER,
-                        'A': -rege *Joc.OPPONENT_MULTIPLIER,
-                        'n': piesa *Joc.OPPONENT_MULTIPLIER,
-                        'N': rege *Joc.OPPONENT_MULTIPLIER,
+        valori_piese = {'a': -piesa * Joc.OPPONENT_MULTIPLIER,
+                        'A': -rege * Joc.OPPONENT_MULTIPLIER,
+                        'n': piesa * Joc.OPPONENT_MULTIPLIER,
+                        'N': rege * Joc.OPPONENT_MULTIPLIER,
                         '·': 0
                         }
-        rege*=Joc.OPPONENT_MULTIPLIER
-        back_row*=Joc.OPPONENT_MULTIPLIER
-        mid_box*=Joc.OPPONENT_MULTIPLIER
+        rege *= Joc.OPPONENT_MULTIPLIER
+        back_row *= Joc.OPPONENT_MULTIPLIER
+        mid_box *= Joc.OPPONENT_MULTIPLIER
         diferenta_piese = 0
         for i in range(Joc.NR_LINII):
             for p in self.matr[i]:
@@ -195,9 +196,9 @@ class Joc:
     def estimeaza_scor(self, adancime, jucator_curent):
         t_final = self.final(jucator_curent)
         if t_final == Joc.JMAX:
-            return (9999 + adancime)*-Joc.OPPONENT_MULTIPLIER
+            return (9999 + adancime) * -Joc.OPPONENT_MULTIPLIER
         elif t_final == Joc.JMIN:
-            return (-9999 - adancime)*-Joc.OPPONENT_MULTIPLIER
+            return (-9999 - adancime) * -Joc.OPPONENT_MULTIPLIER
         elif t_final == 'remiza':
             return 0
         else:
@@ -213,7 +214,7 @@ class Joc:
     def __str__(self):
         sir = '  '
 
-        #for nr_col in range(ord('a'), ord('h') + 1):
+        # for nr_col in range(ord('a'), ord('h') + 1):
         for nr_col in range(self.NR_LINII):
             sir += str(nr_col) + ' '
         sir += '\n'
@@ -261,10 +262,11 @@ class Stare:
         l_mutari = self.tabla_joc.mutari(self)
         juc_opus = self.j_curent
         if self.must_move_piece is not None:
-            #print(l_mutari)
+            # print(l_mutari)
             if len(l_mutari[0][2]) == 0:
                 juc_opus = self.jucator_opus()
-                return [Stare(self.tabla_joc, juc_opus, self.adancime - 1, draw_counter= self.draw_counter + 1, parinte=self)]
+                return [Stare(self.tabla_joc, juc_opus, self.adancime - 1, draw_counter=self.draw_counter + 1,
+                              parinte=self)]
 
         else:
             juc_opus = self.jucator_opus()
@@ -274,7 +276,7 @@ class Stare:
             for m in mutari:
                 tabla_noua = deepcopy(self.tabla_joc)
                 l_stari_mutari.append(
-                    Stare(tabla_noua, juc_opus, self.adancime - 1, draw_counter= self.draw_counter + 1, parinte=self, ))
+                    Stare(tabla_noua, juc_opus, self.adancime - 1, draw_counter=self.draw_counter + 1, parinte=self, ))
                 l_stari_mutari[-1].muta(l, c, m)
 
         return l_stari_mutari
@@ -286,7 +288,7 @@ class Stare:
         self.promoveaza(l_dest, c_dest)
         self.tabla_joc.matr[l][c] = '·'
         if abs(l_dest - l) == 2:  # captura
-            self.draw_counter=0
+            self.draw_counter = 0
             self.tabla_joc.matr[l + (l_dest - l) // 2][c + (c_dest - c) // 2] = '·'
             if len(self.tabla_joc.mutari_piesa(l_dest, c_dest, True)) > 0:
                 self.must_move_piece = (l_dest, c_dest)
@@ -294,11 +296,11 @@ class Stare:
             else:
                 self.must_move_piece = None
         else:
-            self.draw_counter+=1
+            self.draw_counter += 1
             self.must_move_piece = None
         return False
 
-            # self.muta(l_dest, c_dest, dest[1:])
+        # self.muta(l_dest, c_dest, dest[1:])
 
     def __str__(self):
         sir = str(self.tabla_joc) + "(Juc curent: " + self.j_curent + ")\n"
@@ -315,11 +317,11 @@ class Stare:
 
 
 def min_max(stare):
-    if stare.draw_counter==50:
-        stare.scor=0
+    if stare.draw_counter == 50:
+        stare.scor = 0
         return stare
     if stare.adancime == 0 or stare.tabla_joc.final(stare.j_curent):
-        stare.scor = stare.tabla_joc.estimeaza_scor(stare.adancime,stare.j_curent)
+        stare.scor = stare.tabla_joc.estimeaza_scor(stare.adancime, stare.j_curent)
         return stare
 
     # calculez toate mutarile posibile din starea curenta
@@ -365,10 +367,10 @@ def alpha_beta(alpha, beta, stare):
             # calculeaza scorul
             stare_noua = alpha_beta(alpha, beta, mutare)
 
-            if  scor_curent < stare_noua.scor:
+            if scor_curent < stare_noua.scor:
                 stare.stare_aleasa = stare_noua
                 scor_curent = stare_noua.scor
-            if alpha < stare_noua.scor and stare_noua.scor<=0:
+            if alpha < stare_noua.scor and stare_noua.scor <= 0:
                 alpha = stare_noua.scor
                 if alpha >= beta:
                     break
@@ -383,7 +385,7 @@ def alpha_beta(alpha, beta, stare):
                 stare.stare_aleasa = stare_noua
                 scor_curent = stare_noua.scor
 
-            if beta > stare_noua.scor and stare_noua.scor>=0:
+            if beta > stare_noua.scor and stare_noua.scor >= 0:
                 beta = stare_noua.scor
                 if alpha >= beta:
                     break
@@ -409,30 +411,29 @@ def afis_daca_final(stare_curenta):
 
 
 def main():
-    joc_automat = True
+    joc_automat = False
     raspuns_valid = False
 
-    algoritm=None;
+    algoritm = None;
     while algoritm is None:
-        raspuns=input("1 pentru min_max\n2 pentru alpha_beta ")
-        if raspuns=='1':
-            algoritm=min_max
-        elif raspuns=='2':
-            algoritm=alpha_beta
+        raspuns = input("1 pentru min_max\n2 pentru alpha_beta ")
+        if raspuns == '1':
+            algoritm = min_max
+        elif raspuns == '2':
+            algoritm = alpha_beta
     adancimi = [2, 5, 8]
     nivel = input_dificultate()
-    Stare.ADANCIME_MAX = adancimi[nivel - 1]
+    Stare.ADANCIME_MAX = adancimi[int(nivel) - 1]
 
-    #joc_automat = input_joc_automat()
+    # joc_automat = input_joc_automat()
 
-    culoare_piese=None
+    culoare_piese = None
     while culoare_piese is None:
         raspuns = input("n pentru negre\na pentru albe ")
         if raspuns == 'n':
-            culoare_piese='n'
+            culoare_piese = 'n'
         elif raspuns == 'a':
             culoare_piese = 'a'
-
 
     tabla_curenta = Joc()
     print("Tabla initiala")
@@ -444,16 +445,16 @@ def main():
     linie = -1
     coloana = -1
     if culoare_piese == 'n':
-        Joc.JMIN,Joc.JMAX=Joc.JMAX,Joc.JMIN
-        Joc.OPPONENT_MULTIPLIER=-1
+        Joc.JMIN, Joc.JMAX = Joc.JMAX, Joc.JMIN
+        Joc.OPPONENT_MULTIPLIER = -1
     #     stare_curenta.j_curent = Joc.JMIN
     # else:
     #     stare_curenta.j_curent=Joc.JMAX
     timp_inceput_joc = time.time() * 1000
     while True:
-        #print(stare_curenta.draw_counter)
-        #print(stare_curenta.tabla_joc.estimeaza_scor(0,stare_curenta.j_curent))
-        if stare_curenta.draw_counter==50:
+        # print(stare_curenta.draw_counter)
+        # print(stare_curenta.tabla_joc.estimeaza_scor(0,stare_curenta.j_curent))
+        if stare_curenta.draw_counter == 50:
             print("remiza")
             return
         if stare_curenta.j_curent == Joc.JMIN:
@@ -462,28 +463,27 @@ def main():
             raspuns_valid = False
             mutari_juc = stare_curenta.tabla_joc.mutari(stare_curenta)
             if len(mutari_juc) == 0 or mutari_juc is None:
-                print("A castigat ",Joc.JMAX)
+                print("A castigat ", Joc.JMAX)
                 break
             if joc_automat:
                 l, c, dest = random.choice(mutari_juc)
                 stare_curenta.muta(l, c, dest[0])
-                #time.sleep(1)
+                # time.sleep(1)
                 raspuns_valid = True
             print(*mutari_juc, sep='\n')
-            repeta=False
+            repeta = False
             while not raspuns_valid:
                 try:
                     coloana, linie = input_mutare(coloana, linie, stare_curenta)
-                    #coloana = ord(coloana) - ord('a')
+                    # coloana = ord(coloana) - ord('a')
 
-                    linie=int(linie)
-                    coloana=int(coloana)
+                    linie = int(linie)
+                    coloana = int(coloana)
                     # casuta goala de pe acea "coloana"
                     if 0 <= linie < Joc.NR_LINII and (0 <= coloana < Joc.NR_COLOANE):
                         # coloana=ord(coloana)-ord('a')
                         for l, c, mutari_posibile in mutari_juc:
-                            if len(mutari_posibile)==0:
-
+                            if len(mutari_posibile) == 0:
                                 continue;
                             if l == linie and c == coloana:
                                 if len(mutari_posibile) == 1:
@@ -491,6 +491,8 @@ def main():
                                     break
                                 print(mutari_posibile)
                                 coloana, linie = input_mutare(coloana, linie, stare_curenta)
+                                linie = int(linie)
+                                coloana = int(coloana)
                                 for m in mutari_posibile:
                                     if (linie, coloana) == m:
                                         repeta = stare_curenta.muta(l, c, m)
@@ -529,10 +531,10 @@ def main():
 
             # preiau timpul in milisecunde de dinainte de mutare        
             t_inainte = time.time() * 1000
-            if algoritm==alpha_beta:
+            if algoritm == alpha_beta:
                 stare_actualizata = alpha_beta(-5000, 5000, stare_curenta)
             else:
-                stare_actualizata=min_max(stare_curenta)
+                stare_actualizata = min_max(stare_curenta)
             stare_curenta.tabla_joc = stare_actualizata.stare_aleasa.tabla_joc
             print("Tabla dupa mutarea calculatorului")
             print(str(stare_curenta))
